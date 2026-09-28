@@ -1,0 +1,99 @@
+---
+// Floating A/B tab for comparing homepage layouts. Styled with fixed colors so
+// it looks the same on both versions, whatever their palettes.
+interface Props {
+  current: 'a' | 'b';
+}
+const { current } = Astro.props;
+const options = [
+  { id: 'a', label: 'A', href: '/a/', title: 'First layout' },
+  { id: 'b', label: 'B', href: '/', title: 'Current layout' },
+] as const;
+---
+
+<nav class="ab" aria-label="Compare layouts">
+  <span class="ab-label">Layout</span>
+  {
+    options.map((o) => (
+      <a
+        href={o.href}
+        class:list={['ab-opt', { on: o.id === current }]}
+        aria-current={o.id === current ? 'page' : undefined}
+        title={o.title}
+        data-astro-reload
+      >
+        {o.label}
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .ab {
+    position: fixed;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(26, 26, 26, 0.92);
+    color: #fcfcfc;
+    font: 500 13px/1 'Schibsted Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      0 8px 24px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(10px);
+  }
+  .ab-label {
+    padding: 0 8px 0 10px;
+    color: rgba(252, 252, 252, 0.6);
+  }
+  .ab-opt {
+    display: grid;
+    place-items: center;
+    min-width: 34px;
+    height: 30px;
+    border-radius: 999px;
+    color: rgba(252, 252, 252, 0.85);
+    text-decoration: none;
+    transition: background-color 160ms ease-out, color 160ms ease-out;
+  }
+  .ab-opt:hover {
+    background: rgba(252, 252, 252, 0.12);
+    color: #fff;
+  }
+  .ab-opt.on {
+    background: #fcfcfc;
+    color: #1a1a1a;
+  }
+  .ab-opt:focus-visible {
+    outline: 2px solid #fcfcfc;
+    outline-offset: 2px;
+  }
+  @media (prefers-color-scheme: dark) {
+    .ab {
+      background: rgba(232, 232, 232, 0.94);
+      color: #171717;
+    }
+    .ab-label {
+      color: rgba(23, 23, 23, 0.55);
+    }
+    .ab-opt {
+      color: rgba(23, 23, 23, 0.8);
+    }
+    .ab-opt:hover {
+      background: rgba(23, 23, 23, 0.08);
+      color: #171717;
+    }
+    .ab-opt.on {
+      background: #171717;
+      color: #e8e8e8;
+    }
+    .ab-opt:focus-visible {
+      outline-color: #171717;
+    }
+  }
+</style>

@@ -1,11 +1,17 @@
 ---
 import { site } from '../data/site';
+import Arrow from './Arrow.astro';
+interface Props {
+  wide?: boolean;
+  mid?: boolean;
+}
+const { wide = false, mid = false } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
-<footer class="foot wrap">
+<footer class:list={['foot', 'page', { 'page--wide': wide, 'page--mid': mid }]}>
   <span>© {year} {site.name}</span>
-  <a class="link" href="#main">Back to top</a>
+  <a class="link" href={site.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn<Arrow /></a>
 </footer>
 
 <style>
@@ -13,7 +19,8 @@ const year = new Date().getFullYear();
     display: flex;
     justify-content: space-between;
     gap: 16px;
-    padding-top: 40px;
+    margin-top: auto;
+    padding-top: clamp(72px, 12vh, 120px);
     padding-bottom: 40px;
     font-size: 14px;
     color: var(--muted);

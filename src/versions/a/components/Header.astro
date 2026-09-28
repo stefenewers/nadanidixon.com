@@ -6,11 +6,11 @@ interface Props {
   home?: boolean;
 }
 const { home = true } = Astro.props;
-const base = home ? '' : '/';
+const base = home ? '' : '/a/';
 ---
 
 <header class="top wrap">
-  <a class="id" href="/" aria-label={`${site.name}, home`}>
+  <a class="id" href="/a/" aria-label={`${site.name}, home`}>
     <span class="mark" aria-hidden="true">nd</span>
     <span class="id-text">
       <span class="id-name">{site.name}</span>

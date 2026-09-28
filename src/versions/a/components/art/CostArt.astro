@@ -34,27 +34,9 @@ const extras = [
     display: grid;
     place-items: center;
     padding: 12% 8%;
-    --rent: #1d3b64;
-    --x1: #17a673;
-    --x2: #62c79c;
-    --x3: #b5e6cd;
-    --tint: rgba(23, 166, 115, 0.2);
     background:
-      radial-gradient(120% 90% at 100% 0%, var(--tint), transparent 60%),
-      radial-gradient(90% 80% at 0% 100%, rgba(29, 59, 100, 0.12), transparent 60%),
-      #eef3f1;
-  }
-  @media (prefers-color-scheme: dark) {
-    .c-art {
-      --rent: #8fb4ea;
-      --x1: #3fd29a;
-      --x2: #2a9a70;
-      --x3: #1f5c46;
-      --tint: rgba(63, 210, 154, 0.16);
-      background:
-        radial-gradient(120% 90% at 100% 0%, var(--tint), transparent 60%),
-        #1a1f1d;
-    }
+      radial-gradient(120% 90% at 100% 0%, var(--accent-soft), transparent 60%),
+      var(--surface-2);
   }
   .card {
     width: 100%;
@@ -89,16 +71,16 @@ const extras = [
     width: var(--w);
   }
   .rent {
-    background: var(--rent);
+    background: var(--ink);
   }
   .e1 {
-    background: var(--x1);
+    background: var(--accent);
   }
   .e2 {
-    background: var(--x2);
+    background: color-mix(in srgb, var(--accent) 60%, var(--surface));
   }
   .e3 {
-    background: var(--x3);
+    background: color-mix(in srgb, var(--accent) 32%, var(--surface));
   }
   .legend {
     display: flex;

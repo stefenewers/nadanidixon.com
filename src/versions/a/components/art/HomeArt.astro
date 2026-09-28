@@ -30,25 +30,15 @@
 
 <style>
   .h-art {
-    --sun: #f5a524;
-    --glass: #3d8fd1;
+    --sun: #e2a93b;
     position: absolute;
     inset: 0;
     display: grid;
     place-items: center;
     padding: 6% 8% 4%;
     background:
-      radial-gradient(90% 70% at 50% 10%, color-mix(in srgb, var(--sun) 30%, transparent), transparent 70%),
-      #fbf5ea;
-  }
-  @media (prefers-color-scheme: dark) {
-    .h-art {
-      --sun: #ffb938;
-      --glass: #6cb4ec;
-      background:
-        radial-gradient(90% 70% at 50% 10%, color-mix(in srgb, var(--sun) 20%, transparent), transparent 70%),
-        #211d17;
-    }
+      radial-gradient(90% 70% at 50% 10%, color-mix(in srgb, var(--sun) 16%, transparent), transparent 70%),
+      var(--surface-2);
   }
   svg {
     width: 100%;
@@ -75,7 +65,7 @@
     fill: var(--sun);
   }
   .light {
-    fill: color-mix(in srgb, var(--sun) 32%, transparent);
+    fill: color-mix(in srgb, var(--sun) 22%, transparent);
     opacity: 0;
     transition: opacity 1200ms var(--ease-out) 1400ms;
   }
@@ -104,7 +94,7 @@
     stroke-dasharray: 4 4;
   }
   .window {
-    stroke: var(--glass);
+    stroke: var(--accent);
     stroke-width: 8;
     stroke-linecap: round;
   }

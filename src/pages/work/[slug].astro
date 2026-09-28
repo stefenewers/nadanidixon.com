@@ -2,9 +2,9 @@
 // Case study pages, one per file in src/content/work. Drafts only build in dev.
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import Header from '../../components/Header.astro';
+import TopBar from '../../components/TopBar.astro';
 import Footer from '../../components/Footer.astro';
-import Arrow from '../../components/Arrow.astro';
+import { pageAnim } from '../../lib/transitions';
 
 export async function getStaticPaths() {
   const entries = await getCollection('work', ({ data }) => import.meta.env.DEV || !data.draft);
@@ -16,11 +16,10 @@ const { Content } = await render(entry);
 ---
 
 <Base title={entry.data.title} description={entry.data.summary}>
-  <Header home={false} />
-  <main id="main" class="wrap cs">
-    <a class="link back" href="/#work"><Arrow dir="left" />All work</a>
+  <TopBar />
+  <main id="main" class="page cs" transition:animate={pageAnim}>
     {entry.data.draft && <p class="draft">Draft. Not published in production builds.</p>}
-    <h1 class="title">{entry.data.title}</h1>
+    <h1 class="title" tabindex="-1" data-focus-on-nav>{entry.data.title}</h1>
     <p class="summary">{entry.data.summary}</p>
     <dl class="meta">
       <div><dt>Team</dt><dd>{entry.data.team}</dd></div>
@@ -38,13 +37,8 @@ const { Content } = await render(entry);
     padding-top: clamp(40px, 8vw, 96px);
     padding-bottom: 64px;
   }
-  .back {
-    font-size: 14px;
-    color: var(--muted);
-  }
   .draft {
     display: inline-block;
-    margin-top: 24px;
     padding: 4px 10px;
     border-radius: 999px;
     font-size: 13px;

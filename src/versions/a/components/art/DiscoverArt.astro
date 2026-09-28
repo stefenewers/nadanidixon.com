@@ -47,25 +47,9 @@ const cards = [2, 1, 0];
     justify-content: center;
     gap: clamp(20px, 7%, 72px);
     padding: 7%;
-    --accent: #f0605d;
-    --peach: linear-gradient(150deg, #ffe1cf, #ffb89a);
-    --lilac: linear-gradient(150deg, #e6e0ff, #bfb2f5);
-    --mint: linear-gradient(150deg, #d8f3e6, #a8e1c5);
     background:
-      radial-gradient(80% 90% at 0% 100%, rgba(240, 96, 93, 0.16), transparent 65%),
-      radial-gradient(70% 70% at 100% 0%, rgba(140, 120, 240, 0.14), transparent 60%),
-      #fbf4f1;
-  }
-  @media (prefers-color-scheme: dark) {
-    .d-art {
-      --accent: #ff7b77;
-      --peach: linear-gradient(150deg, #5a3326, #8a4a33);
-      --lilac: linear-gradient(150deg, #332c55, #4d4285);
-      --mint: linear-gradient(150deg, #1d3a2e, #2b5a45);
-      background:
-        radial-gradient(80% 90% at 0% 100%, rgba(255, 123, 119, 0.14), transparent 65%),
-        #1f1a19;
-    }
+      radial-gradient(80% 90% at 0% 100%, var(--accent-soft), transparent 65%),
+      var(--surface-2);
   }
   .stack {
     position: relative;
@@ -112,14 +96,11 @@ const cards = [2, 1, 0];
     border-radius: 10px;
     display: grid;
     place-items: center;
-    color: rgba(255, 255, 255, 0.9);
-    background: var(--peach);
+    color: color-mix(in srgb, var(--accent) 55%, transparent);
+    background: linear-gradient(150deg, var(--accent-soft), var(--surface-2));
   }
   .c1 .img {
-    background: var(--lilac);
-  }
-  .c2 .img {
-    background: var(--mint);
+    background: linear-gradient(150deg, var(--surface-2), color-mix(in srgb, #e2a93b 18%, var(--surface-2)));
   }
   .img svg {
     width: 38%;
@@ -211,10 +192,7 @@ const cards = [2, 1, 0];
   .mail-thumbs span {
     aspect-ratio: 4 / 3;
     border-radius: 8px;
-    background: var(--peach);
-  }
-  .mail-thumbs span:last-child {
-    background: var(--lilac);
+    background: linear-gradient(150deg, var(--accent-soft), var(--surface-2));
   }
 
   @media (max-width: 520px) {

@@ -1,0 +1,55 @@
+---
+// Visual slot for a piece of work. An approved screenshot or video (`media`)
+// always wins; until one exists, the drawn composition for that area shows.
+// Art animates in when scrolled into view (see the observer in Base.astro).
+import type { Art, Media as MediaT } from '../data/work';
+import Media from './Media.astro';
+import NeighborhoodArt from './art/NeighborhoodArt.astro';
+import CostArt from './art/CostArt.astro';
+import HomeArt from './art/HomeArt.astro';
+import DiscoverArt from './art/DiscoverArt.astro';
+
+interface Props {
+  art?: Art;
+  media?: MediaT;
+  class?: string;
+  /** view-transition-name, for morphing between pages. */
+  name?: string;
+}
+
+const { art, media, class: className, name } = Astro.props;
+const arts = { neighborhood: NeighborhoodArt, cost: CostArt, home: HomeArt, discover: DiscoverArt };
+const ArtComponent = art ? arts[art] : null;
+const style = name ? `view-transition-name: ${name}` : undefined;
+---
+
+{
+  media ? (
+    <Media media={media} class={className} />
+  ) : (
+    ArtComponent && (
+      <div class:list={['visual', className]} data-art aria-hidden="true" style={style}>
+        <ArtComponent />
+      </div>
+    )
+  )
+}
+
+<style>
+  .visual {
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+    background: var(--surface-2);
+    isolation: isolate;
+  }
+  .visual::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px var(--line);
+    pointer-events: none;
+    z-index: 2;
+  }
+</style>

@@ -1,0 +1,261 @@
+---
+import Base from '../../layouts/Base.astro';
+import TopBar from '../../components/TopBar.astro';
+import Footer from '../../components/Footer.astro';
+import Media from '../../components/Media.astro';
+import Visual from '../../components/Visual.astro';
+import Arrow from '../../components/Arrow.astro';
+import { roles, redfin } from '../../data/work';
+import { pageAnim } from '../../lib/transitions';
+
+const role = roles.find((r) => r.id === 'redfin')!;
+const f = redfin.featured;
+---
+
+<Base title="Redfin" description={`${role.title} at Redfin. Featured: ${f.name}.`}>
+  <TopBar mid />
+  <main id="main" class="page page--mid detail" transition:animate={pageAnim}>
+    <header class="head">
+      <span class="mark mark--strong" transition:name={`mark-${role.id}`} aria-hidden="true">{role.mark}</span>
+      <div>
+        <h1 tabindex="-1" data-focus-on-nav>
+          <span class="company" transition:name={`company-${role.id}`}>{role.company}</span>
+        </h1>
+        <p class="role">{role.title} <span class="years">· {role.years}</span></p>
+      </div>
+    </header>
+    <p class="intro">{redfin.intro}</p>
+
+    <section class="featured" aria-labelledby="featured-name">
+      <Visual art={f.art} media={f.media} class="f-hero" name="art-neighborhood" />
+      <div class="f-grid">
+        <div>
+          <p class="f-label">Featured</p>
+          <h2 id="featured-name" class="f-name">{f.name}</h2>
+          <p class="f-lede">{f.lede}</p>
+        </div>
+        <div>
+          <p class="f-body">{f.body}</p>
+          <dl class="meta">
+            {
+              f.meta.map((m) => (
+                <div>
+                  <dt>{m.label}</dt>
+                  <dd>{m.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+          {
+            f.caseStudy && (
+              <a class="link cta" href={`/work/${f.caseStudy}`}>
+                Read the case study
+                <Arrow dir="right" />
+              </a>
+            )
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="also" aria-labelledby="also-label">
+      <h2 id="also-label" class="label">Also at Redfin</h2>
+      {
+        redfin.groups.map((g) => (
+          <div class="group">
+            <h3 class="g-label">{g.label}</h3>
+            <div class="g-body">
+            {g.art && (
+              <div class:list={['g-visuals', { 'g-visuals--two': g.art.length > 1 }]}>
+                {g.art.map((a) => <Visual art={a} class="g-visual" />)}
+              </div>
+            )}
+            <ul>
+              {g.items.map((item) => (
+                <li>
+                  <span class="i-name">{item.name}</span>
+                  <span class="i-sum">{item.summary}</span>
+                  <Media media={item.media} class="i-media" />
+                </li>
+              ))}
+            </ul>
+            </div>
+          </div>
+        ))
+      }
+    </section>
+  </main>
+  <Footer mid />
+</Base>
+
+<style>
+  .detail {
+    padding-top: clamp(40px, 8vh, 88px);
+  }
+  .head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .head .mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    font-size: 18px;
+  }
+  h1 {
+    font-size: clamp(1.5rem, 1.2rem + 1.1vw, 1.875rem);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+  .company {
+    display: inline-block;
+  }
+  .role {
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .intro {
+    margin-top: 28px;
+    max-width: 34em;
+    color: var(--ink-2);
+  }
+
+  .featured {
+    margin-top: clamp(40px, 6vh, 64px);
+  }
+  .featured :global(.f-hero) {
+    aspect-ratio: 16 / 9;
+  }
+  .f-grid {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px clamp(32px, 5vw, 72px);
+  }
+  .f-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent-ink);
+  }
+  .f-label::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .f-name {
+    margin-top: 10px;
+    font-size: clamp(2rem, 1.4rem + 2.2vw, 3rem);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .f-lede {
+    margin-top: 16px;
+    max-width: 24em;
+    font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+    line-height: 1.35;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .f-body {
+    padding-top: 4px;
+    max-width: 34em;
+    color: var(--ink-2);
+  }
+  .meta {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 36px;
+    font-size: 14px;
+  }
+  .meta dt {
+    color: var(--muted);
+  }
+  .cta {
+    display: inline-flex;
+    margin-top: 20px;
+    font-weight: 500;
+  }
+
+  .also {
+    margin-top: clamp(64px, 9vh, 96px);
+  }
+  .group {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 11em minmax(0, 1fr);
+    gap: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .g-label {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--muted);
+    padding-top: 1px;
+  }
+  .g-visuals {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .g-visuals--two {
+    grid-template-columns: 1fr 1fr;
+  }
+  .g-visuals :global(.g-visual) {
+    aspect-ratio: 21 / 9;
+  }
+  .g-visuals--two :global(.g-visual) {
+    aspect-ratio: 5 / 4;
+  }
+  .group ul {
+    list-style: none;
+    display: grid;
+    gap: 12px;
+    padding-bottom: 4px;
+  }
+  .group li {
+    display: grid;
+    gap: 1px;
+  }
+  .i-name {
+    font-weight: 500;
+  }
+  .i-sum {
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .group :global(.i-media) {
+    margin-top: 12px;
+  }
+
+  @media (max-width: 800px) {
+    .f-grid {
+      grid-template-columns: 1fr;
+    }
+    .featured :global(.f-hero) {
+      aspect-ratio: 1 / 1;
+    }
+  }
+  @media (max-width: 560px) {
+    .g-visuals--two {
+      grid-template-columns: 1fr;
+    }
+    .g-visuals :global(.g-visual) {
+      aspect-ratio: 4 / 3;
+    }
+    .group {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+  }
+</style>

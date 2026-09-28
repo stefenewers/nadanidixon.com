@@ -1,0 +1,386 @@
+---
+// Desktop-only preview stage beside the work index. At rest it shows a neat
+// stack of the Redfin visuals; hovering or focusing a role changes it:
+//   Redfin  -> the stack fans out into a collage and each piece animates
+//   others  -> a typographic card with that role's real tenure on a timeline
+// Purely decorative (aria-hidden); every fact here is also in the index.
+import { roles } from '../data/work';
+import NeighborhoodArt from './art/NeighborhoodArt.astro';
+import CostArt from './art/CostArt.astro';
+import HomeArt from './art/HomeArt.astro';
+import DiscoverArt from './art/DiscoverArt.astro';
+
+const deck = [
+  { key: 'map', Art: NeighborhoodArt, cap: 'Neighborhood Search' },
+  { key: 'cost', Art: CostArt, cap: 'Total Cost of Renting' },
+  { key: 'home', Art: HomeArt, cap: 'About the Home, floor plans, Sun Exposure' },
+  { key: 'disc', Art: DiscoverArt, cap: 'Swipey Recs and emails' },
+];
+
+const now = new Date();
+const nowYear = now.getFullYear() + now.getMonth() / 12;
+const axisStart = Math.floor(Math.min(...roles.map((r) => r.span.start)));
+const axisEnd = Math.ceil(nowYear);
+const pct = (y: number) => ((y - axisStart) / (axisEnd - axisStart)) * 100;
+const ticks = Array.from({ length: axisEnd - axisStart + 1 }, (_, i) => axisStart + i);
+const others = roles.filter((r) => r.id !== 'redfin');
+// Per-role hues for the preview cards only. The site chrome stays monochrome.
+const hues: Record<string, string> = { knovel: '#5b5bd6', divvy: '#12a08a', mastercard: '#f0701f' };
+const monthYear = (s: string) => {
+  const [m, y] = s.split(' ');
+  return Number(y) + ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].indexOf(m) / 12;
+};
+---
+
+<div class="stage" data-stage data-state="rest" aria-hidden="true">
+  <a class="deck" href="/work/redfin" tabindex="-1">
+    {
+      deck.map(({ key, Art, cap }, i) => (
+        <div
+          class={`card card--${key}`}
+          style={`--i: ${i}${key === 'map' ? '; view-transition-name: art-neighborhood' : ''}`}
+        >
+          <Art />
+          <span class="cap">{cap}</span>
+        </div>
+      ))
+    }
+  </a>
+
+  {
+    others.map((r) => (
+      <div class="role" data-for={r.id} style={`--hue: ${hues[r.id] ?? '#687076'}`}>
+        <span class="glyph">{r.mark}</span>
+        <div class="role-text">
+          <p class="role-company">{r.company}</p>
+          <p class="role-title">{r.title}</p>
+        </div>
+        <div class="timeline">
+          <div class="track">
+            {roles.map((o) => (
+              <span
+                class:list={['span', { 'span--on': o.id === r.id }]}
+                style={`left: ${pct(o.span.start)}%; width: ${pct(o.span.end ?? nowYear) - pct(o.span.start)}%`}
+              />
+            ))}
+            {r.steps?.map((s, i) => (
+              <span class="step" style={`left: ${pct(monthYear(s.from))}%; --s: ${i}`}>
+                <span class="step-label">{s.title}</span>
+              </span>
+            ))}
+          </div>
+          <div class="ticks">
+            {ticks.map((t) => (
+              <span style={`left: ${pct(t)}%`}>{t}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  // Re-bound on every page load because the ClientRouter swaps the DOM.
+  document.addEventListener('astro:page-load', () => {
+    const stage = document.querySelector<HTMLElement>('[data-stage]');
+    const list = document.querySelector<HTMLElement>('[data-role-list]');
+    if (!stage || !list) return;
+    const deck = stage.querySelector<HTMLElement>('.deck')!;
+    const map = stage.querySelector<HTMLElement>('.card--map')!;
+    let leaveTimer: number | undefined;
+
+    const set = (state: string) => {
+      window.clearTimeout(leaveTimer);
+      stage.dataset.state = state;
+      deck.classList.toggle('is-in', state === 'redfin');
+    };
+    const rest = () => {
+      window.clearTimeout(leaveTimer);
+      leaveTimer = window.setTimeout(() => set('rest'), 220);
+    };
+
+    // Draw the map in once the page has settled, so the first screen has life.
+    window.setTimeout(() => map.classList.add('is-in'), 350);
+
+    list.querySelectorAll<HTMLElement>('[data-role]').forEach((row) => {
+      row.addEventListener('pointerenter', () => set(row.dataset.role!));
+      row.addEventListener('focusin', () => set(row.dataset.role!));
+    });
+    list.addEventListener('pointerleave', rest);
+    list.addEventListener('focusout', (e) => {
+      if (!list.contains(e.relatedTarget as Node)) rest();
+    });
+    // Moving from the Redfin row onto the collage keeps it open.
+    stage.addEventListener('pointerenter', () => window.clearTimeout(leaveTimer));
+    stage.addEventListener('pointerleave', rest);
+  });
+</script>
+
+<style>
+  .stage {
+    position: sticky;
+    top: 24px;
+    height: min(calc(100vh - 48px), 780px);
+    min-height: 560px;
+  }
+  .deck {
+    position: absolute;
+    inset: 0;
+    display: block;
+    cursor: default;
+  }
+
+  /* Cards. Rest = a tidy stack; the redfin state fans them into a collage. */
+  .card {
+    position: absolute;
+    left: 10%;
+    top: 14%;
+    width: 80%;
+    height: 58%;
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--surface-2);
+    box-shadow: var(--shadow);
+    isolation: isolate;
+    transition:
+      left 760ms var(--ease-out),
+      top 760ms var(--ease-out),
+      width 760ms var(--ease-out),
+      height 760ms var(--ease-out),
+      transform 760ms var(--ease-out),
+      opacity 400ms var(--ease-out);
+    transition-delay: calc(var(--i) * 45ms);
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px var(--line);
+    pointer-events: none;
+    z-index: 3;
+  }
+  .card--map {
+    z-index: 4;
+  }
+  .card--home {
+    z-index: 3;
+    transform: rotate(-4deg) translate(-3%, 4%);
+  }
+  .card--cost {
+    z-index: 2;
+    transform: rotate(3.5deg) translate(4%, 3%);
+  }
+  .card--disc {
+    z-index: 1;
+    transform: rotate(-1.5deg) translate(0, 7%);
+  }
+
+  [data-state='redfin'] .card {
+    transform: none;
+  }
+  [data-state='redfin'] .card--map {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 45%;
+  }
+  [data-state='redfin'] .card--disc {
+    left: 0;
+    top: 47%;
+    width: 36%;
+    height: 53%;
+  }
+  [data-state='redfin'] .card--cost {
+    left: 38%;
+    top: 47%;
+    width: 62%;
+    height: 25.5%;
+  }
+  [data-state='redfin'] .card--home {
+    left: 38%;
+    top: 74.5%;
+    width: 62%;
+    height: 25.5%;
+  }
+  /* Let the smaller pieces breathe in their collage slots. */
+  .card--cost :global(.c-art) {
+    padding: 4% 7%;
+  }
+  .card--cost :global(.card) {
+    gap: 12px;
+    padding: 16px 18px;
+  }
+  .card--cost :global(.legend) {
+    display: none;
+  }
+  .card--disc :global(.stack) {
+    width: 78%;
+  }
+  .card--disc :global(.mail) {
+    display: none;
+  }
+  .card--home :global(.h-art) {
+    padding: 3% 8% 2%;
+  }
+
+  .cap {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    z-index: 4;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 0 1px var(--line);
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity 300ms var(--ease-out),
+      transform 300ms var(--ease-out);
+  }
+  [data-state='redfin'] .cap {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(420ms + var(--i) * 60ms);
+  }
+
+  /* Another role is active: the deck steps back. */
+  .stage:not([data-state='rest']):not([data-state='redfin']) .card {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+    transition-delay: 0ms;
+  }
+
+  /* Role cards */
+  .role {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(28px, 4vw, 48px);
+    border-radius: 18px;
+    background:
+      radial-gradient(90% 70% at 100% 0%, color-mix(in srgb, var(--hue) 22%, transparent), transparent 65%),
+      radial-gradient(80% 60% at 0% 100%, color-mix(in srgb, var(--hue) 10%, transparent), transparent 70%),
+      var(--surface);
+    box-shadow:
+      var(--shadow),
+      inset 0 0 0 1px var(--line);
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+    pointer-events: none;
+    transition:
+      opacity 360ms var(--ease-out),
+      transform 520ms var(--ease-out);
+  }
+  .glyph {
+    font-size: clamp(180px, 22vw, 320px);
+    font-weight: 600;
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+    color: color-mix(in srgb, var(--hue) 16%, transparent);
+    -webkit-text-stroke: 1.5px color-mix(in srgb, var(--hue) 70%, transparent);
+    transform: translateY(10px);
+    transition: transform 700ms var(--ease-out);
+  }
+  .role-company {
+    font-size: clamp(1.75rem, 1rem + 1.6vw, 2.5rem);
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+  }
+  .role-title {
+    margin-top: 6px;
+    color: var(--muted);
+  }
+  .timeline {
+    margin-top: 32px;
+    padding-top: 84px;
+  }
+  .track {
+    position: relative;
+    height: 10px;
+    border-radius: 99px;
+    background: color-mix(in srgb, var(--hue) 10%, var(--surface-2));
+  }
+  .span {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 99px;
+    background: var(--line-strong);
+    opacity: 0.35;
+  }
+  .span--on {
+    background: var(--hue);
+    opacity: 1;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 700ms var(--ease-out) 120ms;
+  }
+  .step {
+    position: absolute;
+    bottom: 100%;
+    width: 0;
+    height: calc(18px + var(--s) * 22px);
+    border-left: 1.5px solid var(--hue);
+    opacity: 0;
+    transition: opacity 300ms var(--ease-out);
+    transition-delay: calc(500ms + var(--s) * 120ms);
+  }
+  .step-label {
+    position: absolute;
+    top: -2px;
+    left: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    color: var(--ink);
+    transform: translateY(-50%);
+  }
+  .ticks {
+    position: relative;
+    height: 18px;
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .ticks span {
+    position: absolute;
+    transform: translateX(-50%);
+  }
+  .ticks span:first-child {
+    transform: none;
+  }
+  .ticks span:last-child {
+    transform: translateX(-100%);
+  }
+
+  .stage[data-state='knovel'] .role[data-for='knovel'],
+  .stage[data-state='divvy'] .role[data-for='divvy'],
+  .stage[data-state='mastercard'] .role[data-for='mastercard'] {
+    opacity: 1;
+    transform: none;
+    transition-delay: 80ms;
+  }
+  .stage[data-state='knovel'] .role[data-for='knovel'] .glyph,
+  .stage[data-state='divvy'] .role[data-for='divvy'] .glyph,
+  .stage[data-state='mastercard'] .role[data-for='mastercard'] .glyph {
+    transform: none;
+  }
+  .stage[data-state='knovel'] .role[data-for='knovel'] .span--on,
+  .stage[data-state='divvy'] .role[data-for='divvy'] .span--on,
+  .stage[data-state='mastercard'] .role[data-for='mastercard'] .span--on {
+    transform: none;
+  }
+  .stage[data-state='mastercard'] .role[data-for='mastercard'] .step {
+    opacity: 1;
+  }
+</style>

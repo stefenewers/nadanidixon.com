@@ -1,0 +1,58 @@
+---
+import { site } from '../data/site';
+import Arrow from './Arrow.astro';
+---
+
+<header class="intro">
+  <span class="mark mark--strong monogram" aria-hidden="true">nd</span>
+  <h1 class="lead">
+    <span class="name">{site.name}</span>
+    <span class="desc">Software engineer in Atlanta, building the parts of a product people actually touch.</span>
+  </h1>
+  <p class="about">
+    Search boxes, listing pages, the email that brings you back. Right now that’s rental search at Redfin, and
+    alongside it I’m working toward an M.S. in Computer Science at Georgia Tech.
+  </p>
+  <p class="links">
+    <a class="link" href={site.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn<Arrow /></a>
+  </p>
+</header>
+
+<style>
+  .intro {
+    padding-top: clamp(48px, 9vh, 104px);
+  }
+  .monogram {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    font-size: 15px;
+    letter-spacing: -0.04em;
+  }
+  .lead {
+    margin-top: 28px;
+    font-size: clamp(1.5rem, 1.2rem + 1.1vw, 1.875rem);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .name {
+    display: block;
+    color: var(--ink);
+  }
+  .desc {
+    display: block;
+    color: var(--muted);
+  }
+  .about {
+    margin-top: 20px;
+    max-width: 34em;
+    color: var(--ink-2);
+  }
+  .links {
+    margin-top: 20px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+</style>

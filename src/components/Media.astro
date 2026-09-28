@@ -1,0 +1,54 @@
+---
+// Approved screenshot or screen recording. Renders nothing until one is set
+// in src/data/work.ts, so the page never shows a placeholder.
+import type { Media } from '../data/work';
+
+interface Props {
+  media?: Media;
+  class?: string;
+}
+const { media, class: className } = Astro.props;
+---
+
+{
+  media && (
+    <figure class:list={['media', className]}>
+      {media.kind === 'video' ? (
+        <video
+          src={media.src}
+          width={media.width}
+          height={media.height}
+          aria-label={media.alt}
+          autoplay
+          muted
+          loop
+          playsinline
+          controls
+        />
+      ) : (
+        <img src={media.src} alt={media.alt} width={media.width} height={media.height} loading="lazy" decoding="async" />
+      )}
+    </figure>
+  )
+}
+
+<style>
+  .media {
+    overflow: hidden;
+    border-radius: 14px;
+    background: var(--surface-2);
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  img,
+  video {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    video {
+      /* Autoplay is still allowed by the browser; controls stay visible so it can be paused. */
+      animation: none;
+    }
+  }
+</style>

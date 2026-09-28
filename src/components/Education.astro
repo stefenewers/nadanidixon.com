@@ -1,0 +1,52 @@
+---
+import { education } from '../data/work';
+---
+
+<section class="edu" aria-labelledby="edu-label">
+  <h2 id="edu-label" class="label">Education</h2>
+  <ul>
+    {
+      education.map((e) => (
+        <li>
+          <span class="place">{e.place}</span>
+          <span class="detail">{e.detail}</span>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .edu {
+    margin-top: 56px;
+  }
+  ul {
+    list-style: none;
+    margin-top: 12px;
+    border-top: 1px solid var(--line);
+  }
+  li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 15px;
+  }
+  .place {
+    font-weight: 500;
+  }
+  .detail {
+    color: var(--muted);
+    text-align: right;
+  }
+  @media (max-width: 480px) {
+    li {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .detail {
+      text-align: left;
+    }
+  }
+</style>

@@ -1,0 +1,230 @@
+---
+import { roles } from '../data/work';
+import Arrow from './Arrow.astro';
+import Visual from './Visual.astro';
+import { redfin } from '../data/work';
+---
+
+<section class="index" aria-labelledby="work-label">
+  <h2 id="work-label" class="label">Work</h2>
+  <ol class="rows" data-role-list>
+    {
+      roles.map((r) =>
+        r.href ? (
+          <li data-role={r.id}>
+            <a class="row row--open" href={r.href}>
+              <Visual art={redfin.featured.art} media={redfin.featured.media} class="row-visual" name="art-neighborhood" />
+              <span class="mark mark--strong" transition:name={`mark-${r.id}`} aria-hidden="true">{r.mark}</span>
+              <span class="main">
+                <span class="company" transition:name={`company-${r.id}`}>{r.company}</span>
+                <span class="title">{r.title}</span>
+              </span>
+              <span class="years">{r.years}</span>
+              {r.featured && (
+                <span class="featured">
+                  <span class="f-label">Featured</span>
+                  <span class="f-name">{r.featured.name}</span>
+                  <span class="f-sum">{r.featured.summary}</span>
+                </span>
+              )}
+              <span class="open">
+                Open<Arrow dir="right" />
+              </span>
+            </a>
+          </li>
+        ) : (
+          <li class="row" data-role={r.id}>
+            <span class="mark" aria-hidden="true">{r.mark}</span>
+            <span class="main">
+              <span class="company">{r.company}</span>
+              <span class="title">{r.title}</span>
+            </span>
+            <span class="years">{r.years}</span>
+          </li>
+        ),
+      )
+    }
+  </ol>
+</section>
+
+<style>
+  .index {
+    margin-top: clamp(48px, 8vh, 80px);
+  }
+  .rows {
+    list-style: none;
+    margin-top: 4px;
+  }
+  .rows > li {
+    border-bottom: 1px solid var(--line);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: start;
+    padding: 16px 0;
+  }
+  .main {
+    display: grid;
+    gap: 1px;
+    min-width: 0;
+  }
+  .company {
+    font-weight: 500;
+    width: fit-content;
+  }
+  .title {
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .years {
+    font-size: 14px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    padding-top: 2px;
+  }
+
+  /* The one explorable row. It gets a surface and extra room so it reads as
+     the lead entry without a separate hero. */
+  .row--open {
+    grid-template-areas:
+      'mark main years'
+      'mark main open'
+      '.    feat feat';
+    grid-template-rows: auto 1fr auto;
+    row-gap: 0;
+    position: relative;
+    margin: 8px -16px;
+    padding: 18px 16px 20px;
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow:
+      inset 0 0 0 1px var(--line),
+      0 1px 2px rgba(0, 0, 0, 0.04);
+    transition:
+      box-shadow 220ms var(--ease-out),
+      transform 220ms var(--ease-out);
+  }
+  .rows > li:has(.row--open) {
+    border-bottom: 0;
+  }
+  .row--open .company {
+    font-size: 17px;
+  }
+  .row--open .mark {
+    grid-area: mark;
+  }
+  /* Inline preview for touch and narrow screens; desktop uses the Stage. */
+  .row--open :global(.row-visual) {
+    display: none;
+  }
+  .row--open .main {
+    grid-area: main;
+  }
+  .row--open .years {
+    grid-area: years;
+    justify-self: end;
+  }
+  .row--open .open {
+    grid-area: open;
+    justify-self: end;
+    align-self: start;
+    margin-top: 10px;
+  }
+  .featured {
+    grid-area: feat;
+    display: grid;
+    gap: 2px;
+    margin-top: 14px;
+    padding-left: 14px;
+    border-left: 2px solid var(--accent);
+  }
+  .f-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--accent-ink);
+  }
+  .f-name {
+    font-weight: 500;
+  }
+  .f-sum {
+    color: var(--ink-2);
+    font-size: 15px;
+  }
+  .open {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--surface-2);
+    color: var(--ink);
+    transition: background-color 200ms var(--ease-out);
+  }
+  .open :global(svg) {
+    width: 11px;
+    height: 11px;
+    transition: transform 220ms var(--ease-out);
+  }
+  @media (hover: hover) {
+    .row--open:hover {
+      box-shadow:
+        inset 0 0 0 1px var(--line-strong),
+        var(--shadow);
+    }
+    .row--open:hover .open {
+      background: var(--ink);
+      color: var(--bg);
+    }
+    .row--open:hover .open :global(svg) {
+      transform: translateX(2px);
+    }
+  }
+  .row--open:active {
+    transform: scale(0.995);
+  }
+
+  @media (max-width: 1023px) {
+    .row--open {
+      grid-template-areas:
+        'vis  vis  vis'
+        'mark main years'
+        'mark main open'
+        '.    feat feat';
+    }
+    .row--open :global(.row-visual) {
+      display: block;
+      grid-area: vis;
+      aspect-ratio: 16 / 10;
+      margin: -6px -8px 18px;
+      border-radius: 12px;
+    }
+  }
+  @media (max-width: 560px) {
+    .row {
+      gap: 14px;
+    }
+    .row--open {
+      grid-template-areas:
+        'vis  vis  vis'
+        'mark main years'
+        '.    feat feat'
+        '.    open open';
+      grid-template-rows: auto;
+      row-gap: 0;
+    }
+    .row--open .open {
+      justify-self: start;
+      margin-top: 16px;
+    }
+    .row--open {
+      margin-inline: -12px;
+      padding-inline: 12px;
+    }
+  }
+</style>

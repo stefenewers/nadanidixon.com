@@ -75,31 +75,23 @@ const streetsV = Array.from({ length: 12 }, (_, i) => 40 + i * 108);
 
 <style>
   .n-art {
-    /* Project palette: its own colors, independent of the monochrome site. */
-    --land: #f1efe6;
-    --street: rgba(60, 56, 40, 0.08);
-    --arterial: #ffffff;
-    --water: #bfdcec;
-    --park: #cfe8c9;
-    --accent: #1f8a5b;
-    --accent-soft: rgba(31, 138, 91, 0.18);
-    --thumb: linear-gradient(135deg, #cfe8c9, #bfdcec);
+    --land: #e9e7df;
+    --street: rgba(22, 22, 20, 0.07);
+    --arterial: #f7f6f2;
+    --water: #d5e0e3;
+    --park: #d6e3d4;
     position: absolute;
     inset: 0;
     background: var(--land);
     overflow: hidden;
-    container-type: size;
   }
   @media (prefers-color-scheme: dark) {
     .n-art {
-      --land: #1d1f1a;
-      --street: rgba(232, 232, 232, 0.06);
-      --arterial: #2b2d27;
-      --water: #173244;
-      --park: #1c3323;
-      --accent: #5fd39a;
-      --accent-soft: rgba(95, 211, 154, 0.18);
-      --thumb: linear-gradient(135deg, #1c3323, #173244);
+      --land: #1f1f1c;
+      --street: rgba(236, 234, 228, 0.06);
+      --arterial: #2a2a26;
+      --water: #1e2a2d;
+      --park: #1f2b22;
     }
   }
   .map {
@@ -135,7 +127,7 @@ const streetsV = Array.from({ length: 12 }, (_, i) => 40 + i * 108);
   }
   @media (hover: hover) {
     .hood:hover {
-      fill: rgba(31, 138, 91, 0.07);
+      fill: rgba(22, 22, 20, 0.04);
     }
   }
   .selected-fill {
@@ -257,7 +249,7 @@ const streetsV = Array.from({ length: 12 }, (_, i) => 40 + i * 108);
     width: 44px;
     height: 34px;
     border-radius: 7px;
-    background: var(--thumb);
+    background: linear-gradient(135deg, var(--accent-soft), var(--surface-2));
     flex-shrink: 0;
   }
   .lines {
@@ -278,22 +270,9 @@ const streetsV = Array.from({ length: 12 }, (_, i) => 40 + i * 108);
     width: 55%;
   }
 
-  /* Scale overlays to the frame, not the viewport, so the map reads the same
-     in a small card as in a full-width hero. */
-  @container (max-width: 640px) {
+  @media (max-width: 720px) {
     .results {
       display: none;
-    }
-    .search {
-      top: 10px;
-      left: 10px;
-      padding: 7px 12px 7px 10px;
-      gap: 7px;
-      font-size: 12px;
-    }
-    .search svg {
-      width: 12px;
-      height: 12px;
     }
   }
 </style>

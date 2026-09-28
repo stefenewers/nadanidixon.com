@@ -1,27 +1,34 @@
 # What we need from Nadani before publishing
 
-Everything on the site today is written from the project names alone. Each item below either replaces an illustration or confirms a line of copy.
+The site's copy is written from project names and her LinkedIn. The visuals are abstract drawings standing in for approved screenshots; each one is replaced automatically when `media` is set. Each item below says exactly where the answer goes.
 
-## Confirm the copy
-- [ ] Headline: is "I help build rental search at Redfin" accurate and comfortable?
-- [ ] Neighborhood Search: does "start from the part of town they already have in mind and explore rentals from there" describe it correctly?
-- [ ] Her role on Neighborhood Search: lead engineer, one of several, front end, back end, full stack? Currently says "Software engineer" only.
-- [ ] One-line summaries for each feature (src/data/work.ts), especially Sun Exposure "parity" (parity with what?), Total Cost of Renting (what costs are included?), and the Mobile Media Gallery sticky footer (what's in the footer?).
-- [ ] Web, iOS, Android, or all three for each feature.
-- [ ] Redfin title: LinkedIn says "Software Engineer", the brief said "Software Engineer II". The site uses II. Which is right?
-- [ ] Knovel Protocol (founding engineer, 2024 to 2025) is now listed. Anything she built there worth a line or a project entry?
-- [ ] Her LinkedIn shows Knovel overlapping Redfin until July 2025. Fine to show years only, as the site does now?
-- [ ] The personal line in Background ("I like building things where it's easy to picture the person on the other side of the screen"). Keep, rewrite, or cut.
+## 1. Voice and introduction
+Where: `src/components/Intro.astro`
+- [ ] Her LinkedIn About section (it's behind a sign-in, so we couldn't read it). The intro line "building the parts of a product people actually touch" and the "search boxes, listing pages, the email that brings you back" sentence are placeholders for her own personality. Rewrite from her About section.
+- [ ] Is "Software engineer in Atlanta" how she wants to be introduced?
 
-## Screenshots (highest priority)
-Only public, launched UI, cleared by Redfin. PNG, at least 2400px wide for the featured image.
-- [ ] Neighborhood Search: one hero image (16:9) plus 2 to 3 detail shots.
-- [ ] Total Cost of Renting on a listing.
-- [ ] About the Home, a floor plan view, and Sun Exposure on a rental listing.
-- [ ] Swipey Recs in use, ideally a short screen recording.
-- [ ] One marketing email she's proud of.
+## 2. Work index facts
+Where: `roles` in `src/data/work.ts`
+- [ ] Redfin title: LinkedIn says "Software Engineer", the original brief said "Software Engineer II". The site uses II. Which is right?
+- [ ] Knovel overlaps Redfin until July 2025. Fine to show years only?
+- [ ] Knovel, Divvy, Mastercard: is there a verified project story for any of them? If so, it can get its own detail page like Redfin (add `href` to that role and a page under `src/pages/work/`).
 
-## Results and depth
-- [ ] Any launch outcome Redfin allows her to share publicly (qualitative is fine).
-- [ ] For Neighborhood Search: the problem, what she owned, one interesting engineering decision, and what happened after launch (see src/content/work/neighborhood-search.md).
-- [ ] Résumé PDF, and whether she wants a public email address.
+## 3. Neighborhood Search (featured)
+Where: `redfin.featured` in `src/data/work.ts`
+- [ ] Confirm the description: "helps renters start from the part of town they already have in mind and explore rentals from there."
+- [ ] Her exact role: lead engineer, one of several, front end, back end, full stack? Replaces `meta` → Role.
+- [ ] **Hero screenshot or screen recording**: public, launched UI, cleared by Redfin. At least 2400px wide. Put it in `public/work/` and set `redfin.featured.media` (`{ src, alt, width, height }`, plus `kind: 'video'` for mp4). It replaces the map drawing as the hero of `/work/redfin` and the preview in the mobile Redfin card.
+- [ ] Case study: the problem, what she owned, one engineering decision worth explaining, and any result she's allowed to share. Goes in `src/content/work/neighborhood-search.md`. When ready, set `draft: false` there and `caseStudy: 'neighborhood-search'` on `redfin.featured`. A "Read the case study" link appears on the Redfin page. Until then the case study stays unpublished.
+
+## 4. Other Redfin work
+Where: `redfin.groups` in `src/data/work.ts`
+- [ ] Confirm each one-line summary, especially Sun Exposure (the brief called it "parity"; parity with what?), Total Cost of Renting (what costs are included?), and the media gallery footer (what's in it?).
+- [ ] Web, iOS, Android, or all three for each.
+- [ ] Screenshots per group replace the drawings in `redfin.groups[].art` (cost, floor plan, swipe cards). Per-item screenshots: set `media` on the item and it renders under that item's summary.
+- [ ] The homepage hover collage (`src/components/Stage.astro`) uses the same drawings. Swap them for screenshots there too once approved. Most wanted: Total Cost of Renting, a floor plan view, Swipey Recs (a short recording is ideal), one marketing email.
+
+## 5. Links
+Where: `src/data/site.ts`
+- [ ] Résumé PDF. Put it in `public/` and set `resume`.
+- [ ] Whether she wants a public email address. Set `email`.
+  Neither link renders until it's set.
