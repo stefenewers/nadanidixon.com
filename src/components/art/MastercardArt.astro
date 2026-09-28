@@ -1,0 +1,425 @@
+---
+// Mastercard: one spending event moving through an API boundary, an event
+// stream, and services that stay in sync. A rising step line underneath marks
+// four years of growth. Conceptual only: no real card design, dashboard,
+// service names, or traffic numbers.
+const lanesW = [190, 270, 350];
+const lanesT = [352, 422, 492];
+const blocks = Array.from({ length: 11 }, (_, i) => i);
+const servicesW = [120, 298, 476];
+const servicesT = [30, 215, 400];
+const db = 'M-11 -8 A11 4 0 0 0 11 -8 A11 4 0 0 0 -11 -8 V8 A11 4 0 0 0 11 8 V-8 M-11 0 A11 4 0 0 0 11 0';
+const check = 'M-4.5 0 L-1.5 3 L4.5 -3';
+---
+
+<div class="mc-art">
+  <!-- Wide -->
+  <svg class="wide" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <marker id="mc-arr-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M1 1 L9 5 L1 9" class="arrowhead" />
+      </marker>
+      {lanesW.map((y, i) => (
+        <clipPath id={`mc-lane-w-${i}`}>
+          <rect x="450" y={y} width="400" height="40" rx="10" />
+        </clipPath>
+      ))}
+    </defs>
+
+    <g class="pop" style="--d: 100ms">
+      <rect x="60" y="230" width="180" height="114" rx="14" class="card" />
+      <rect x="84" y="256" width="34" height="26" rx="5" class="card-chip" />
+      <rect x="84" y="306" width="100" height="8" rx="4" class="card-line" />
+      <rect x="84" y="322" width="60" height="8" rx="4" class="card-line faint" />
+      <text x="150" y="380" text-anchor="middle" class="t-small">Spend event</text>
+    </g>
+    <path class="edge draw" style="--d: 350ms" d="M240 287 H300" pathLength="1" marker-end="url(#mc-arr-w)" />
+
+    <g class="pop" style="--d: 220ms">
+      <text x="338" y="134" text-anchor="middle" class="t-label strong">REST API</text>
+      <rect x="300" y="150" width="76" height="280" rx="38" class="gate" />
+      <text x="338" y="296" text-anchor="middle" class="t-mono">{'{ }'}</text>
+    </g>
+    <path class="edge draw" style="--d: 550ms" d="M376 290 H430" pathLength="1" marker-end="url(#mc-arr-w)" />
+
+    <g class="pop" style="--d: 320ms">
+      <text x="430" y="134" class="t-label strong">Event stream · Kafka</text>
+      <rect x="430" y="150" width="440" height="280" rx="22" class="stream" />
+      {lanesW.map((y, i) => (
+        <g>
+          <rect x="450" y={y} width="400" height="40" rx="10" class="lane" />
+          <g clip-path={`url(#mc-lane-w-${i})`}>
+            <g class={`flowing lane-${i}`}>
+              {blocks.map((b) => (
+                <rect x={458 + b * 48} y={y + 6} width="34" height="28" rx="6" class="msg" />
+              ))}
+            </g>
+          </g>
+        </g>
+      ))}
+    </g>
+
+    {servicesW.map((y, i) => (
+      <path
+        class="edge draw"
+        style={`--d: ${1400 + i * 120}ms`}
+        d={`M870 290 C915 290 915 ${y + 52} 960 ${y + 52}`}
+        pathLength="1"
+        marker-end="url(#mc-arr-w)"
+      />
+    ))}
+    {servicesW.map((y, i) => (
+      <g class="pop" style={`--d: ${500 + i * 100}ms`}>
+        <rect x="960" y={y} width="200" height="104" rx="16" class="card-light" />
+        <text x="984" y={y + 36} class="t-node">Service</text>
+        {i !== 1 && <path transform={`translate(1124 ${y + 34})`} d={db} class="db" />}
+        <g class="synced" style={`--d: ${1700 + i * 120}ms`}>
+          <rect x="984" y={y + 54} width="92" height="28" rx="14" class="pill" />
+          <circle cx="1000" cy={y + 68} r="7" class="pill-dot" />
+          <path transform={`translate(1000 ${y + 68})`} d={check} class="pill-check" />
+          <text x="1014" y={y + 73} class="t-pill">in sync</text>
+        </g>
+      </g>
+    ))}
+
+    <!-- The one highlighted event, travelling left to right. -->
+    <rect x="133" y="273" width="34" height="28" rx="6" class="evt evt-w" />
+
+    <!-- Growth: SWE I to Senior -->
+    <path class="stair draw" style="--d: 1900ms" d="M60 670 H400 V640 H740 V610 H1140" pathLength="1" />
+    {[
+      { x: 60, y: 670, t: 'Software Engineer I · 2020' },
+      { x: 400, y: 640, t: 'Software Engineer II · 2022' },
+      { x: 740, y: 610, t: 'Senior Software Engineer · 2024' },
+    ].map((s, i) => (
+      <g class="pop" style={`--d: ${2000 + i * 200}ms`}>
+        <circle cx={s.x} cy={s.y} r="5" class="stair-dot" />
+        <text x={s.x + 2} y={s.y - 14} class="t-step">{s.t}</text>
+      </g>
+    ))}
+  </svg>
+
+  <!-- Tall -->
+  <svg class="tall" viewBox="0 0 600 1000" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <marker id="mc-arr-t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M1 1 L9 5 L1 9" class="arrowhead" />
+      </marker>
+      {lanesT.map((y, i) => (
+        <clipPath id={`mc-lane-t-${i}`}>
+          <rect x="60" y={y} width="480" height="44" rx="10" />
+        </clipPath>
+      ))}
+    </defs>
+
+    <g class="pop" style="--d: 100ms">
+      <rect x="210" y="30" width="180" height="114" rx="14" class="card" />
+      <rect x="234" y="56" width="34" height="26" rx="5" class="card-chip" />
+      <rect x="234" y="106" width="100" height="8" rx="4" class="card-line" />
+      <rect x="234" y="122" width="60" height="8" rx="4" class="card-line faint" />
+      <text x="402" y="92" class="t-small">Spend event</text>
+    </g>
+    <path class="edge draw" style="--d: 350ms" d="M300 144 V200" pathLength="1" marker-end="url(#mc-arr-t)" />
+
+    <g class="pop" style="--d: 220ms">
+      <rect x="130" y="200" width="340" height="64" rx="32" class="gate" />
+      <text x="300" y="239" text-anchor="middle" class="t-label strong">REST API</text>
+    </g>
+    <path class="edge draw" style="--d: 550ms" d="M300 264 V320" pathLength="1" marker-end="url(#mc-arr-t)" />
+
+    <g class="pop" style="--d: 320ms">
+      <text x="40" y="310" class="t-label strong">Event stream · Kafka</text>
+      <rect x="40" y="320" width="520" height="240" rx="22" class="stream" />
+      {lanesT.map((y, i) => (
+        <g>
+          <rect x="60" y={y} width="480" height="44" rx="10" class="lane" />
+          <g clip-path={`url(#mc-lane-t-${i})`}>
+            <g class={`flowing lane-${i}`}>
+              {blocks.map((b) => (
+                <rect x={68 + b * 48} y={y + 7} width="34" height="30" rx="6" class="msg" />
+              ))}
+            </g>
+          </g>
+        </g>
+      ))}
+    </g>
+
+    {servicesT.map((x, i) => (
+      <path
+        class="edge draw"
+        style={`--d: ${1400 + i * 120}ms`}
+        d={`M300 560 C300 600 ${x + 85} 600 ${x + 85} 640`}
+        pathLength="1"
+        marker-end="url(#mc-arr-t)"
+      />
+    ))}
+    {servicesT.map((x, i) => (
+      <g class="pop" style={`--d: ${500 + i * 100}ms`}>
+        <rect x={x} y="640" width="170" height="116" rx="16" class="card-light" />
+        <text x={x + 20} y="676" class="t-node">Service</text>
+        {i !== 1 && <path transform={`translate(${x + 140} 670)`} d={db} class="db" />}
+        <g class="synced" style={`--d: ${1700 + i * 120}ms`}>
+          <rect x={x + 20} y="700" width="92" height="28" rx="14" class="pill" />
+          <circle cx={x + 36} cy="714" r="7" class="pill-dot" />
+          <path transform={`translate(${x + 36} 714)`} d={check} class="pill-check" />
+          <text x={x + 50} y="719" class="t-pill">in sync</text>
+        </g>
+      </g>
+    ))}
+
+    <rect x="283" y="73" width="34" height="28" rx="6" class="evt evt-t" />
+
+    <path class="stair draw" style="--d: 1900ms" d="M40 960 H220 V910 H400 V860 H560" pathLength="1" />
+    {[
+      { x: 40, y: 960, t: 'SWE I · 2020' },
+      { x: 220, y: 910, t: 'SWE II · 2022' },
+      { x: 400, y: 860, t: 'Senior · 2024' },
+    ].map((s, i) => (
+      <g class="pop" style={`--d: ${2000 + i * 200}ms`}>
+        <circle cx={s.x} cy={s.y} r="5" class="stair-dot" />
+        <text x={s.x + 2} y={s.y - 14} class="t-step">{s.t}</text>
+      </g>
+    ))}
+  </svg>
+</div>
+
+<style>
+  .mc-art {
+    --orange: #f0701f;
+    --slate: #23303e;
+    --edge: #8a8480;
+    --ok: #2e9d57;
+    position: absolute;
+    inset: 0;
+    container-type: inline-size;
+    background:
+      radial-gradient(70% 70% at 100% 0%, rgba(240, 112, 31, 0.14), transparent 60%),
+      radial-gradient(70% 60% at 0% 100%, rgba(35, 48, 62, 0.08), transparent 60%),
+      #f7f3ef;
+  }
+  @media (prefers-color-scheme: dark) {
+    .mc-art {
+      --orange: #ff8a3d;
+      --slate: #3a4b5e;
+      --edge: #8f8883;
+      --ok: #58c47f;
+      background:
+        radial-gradient(70% 70% at 100% 0%, rgba(255, 138, 61, 0.12), transparent 60%),
+        #1f1b17;
+    }
+  }
+  svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 3%;
+  }
+  .tall {
+    display: none;
+  }
+  @container (max-width: 520px) {
+    .wide {
+      display: none;
+    }
+    .tall {
+      display: block;
+    }
+  }
+
+  .card {
+    fill: var(--slate);
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.16));
+  }
+  .card-chip {
+    fill: #d9b25a;
+  }
+  .card-line {
+    fill: rgba(255, 255, 255, 0.55);
+  }
+  .card-line.faint {
+    fill: rgba(255, 255, 255, 0.3);
+  }
+  .gate {
+    fill: var(--surface);
+    stroke: color-mix(in srgb, var(--orange) 55%, transparent);
+    stroke-width: 2;
+  }
+  .stream {
+    fill: color-mix(in srgb, var(--slate) 6%, transparent);
+    stroke: var(--line-strong);
+    stroke-width: 1.2;
+  }
+  .lane {
+    fill: color-mix(in srgb, var(--surface) 70%, transparent);
+  }
+  .msg {
+    fill: color-mix(in srgb, var(--slate) 20%, var(--surface));
+  }
+  /* Steady traffic in every lane conveys scale without any numbers. */
+  .flowing {
+    animation: mc-flow 2.4s linear infinite;
+  }
+  .lane-1 {
+    animation-duration: 1.9s;
+  }
+  .lane-2 {
+    animation-duration: 2.8s;
+  }
+  @keyframes mc-flow {
+    from {
+      transform: translateX(-48px);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  .card-light {
+    fill: var(--surface);
+    stroke: var(--line);
+    stroke-width: 1.5;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.07));
+  }
+  .db {
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 1.6;
+  }
+  .pill {
+    fill: color-mix(in srgb, var(--ok) 14%, transparent);
+  }
+  .pill-dot {
+    fill: var(--ok);
+  }
+  .pill-check {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .t-pill {
+    font: 600 13px var(--font);
+    fill: color-mix(in srgb, var(--ok) 75%, var(--ink));
+  }
+  .edge {
+    fill: none;
+    stroke: var(--edge);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  .arrowhead {
+    fill: none;
+    stroke: var(--edge);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .evt {
+    fill: var(--orange);
+    opacity: 0;
+    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--orange) 60%, transparent));
+  }
+  .stair {
+    fill: none;
+    stroke: var(--orange);
+    stroke-width: 3;
+    stroke-linejoin: round;
+  }
+  .stair-dot {
+    fill: var(--orange);
+  }
+  .t-step {
+    font: 500 14px var(--font);
+    fill: var(--ink);
+  }
+  .t-node {
+    font: 500 19px var(--font);
+    fill: var(--ink);
+  }
+  .t-small {
+    font: 500 14px var(--font);
+    fill: var(--muted);
+  }
+  .t-label {
+    font: 500 14px var(--font);
+    fill: var(--muted);
+  }
+  .t-label.strong {
+    fill: var(--ink);
+    font-weight: 600;
+  }
+  .t-mono {
+    font: 500 22px ui-monospace, 'SF Mono', Menlo, monospace;
+    fill: var(--orange);
+  }
+
+  .pop,
+  .synced {
+    opacity: 0;
+    transform: translateY(8px);
+    transform-box: fill-box;
+    transition:
+      opacity 500ms var(--ease-out),
+      transform 600ms var(--ease-out);
+    transition-delay: var(--d, 0ms);
+  }
+  .draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 800ms var(--ease-in-out);
+    transition-delay: var(--d, 0ms);
+  }
+  :global(.is-in) .pop,
+  :global(.is-in) .synced {
+    opacity: 1;
+    transform: none;
+  }
+  :global(.is-in) .draw {
+    stroke-dashoffset: 0;
+  }
+  :global(.is-in) .evt-w {
+    animation: mc-evt-w 1.6s var(--ease-in-out) 500ms both;
+  }
+  :global(.is-in) .evt-t {
+    animation: mc-evt-t 1.6s var(--ease-in-out) 500ms both;
+  }
+  @keyframes mc-evt-w {
+    0% {
+      opacity: 0;
+      transform: translate(0, 0);
+    }
+    12% {
+      opacity: 1;
+    }
+    40% {
+      transform: translate(188px, 0);
+    }
+    88% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(720px, 6px);
+    }
+  }
+  @keyframes mc-evt-t {
+    0% {
+      opacity: 0;
+      transform: translate(0, 0);
+    }
+    12% {
+      opacity: 1;
+    }
+    40% {
+      transform: translate(0, 145px);
+    }
+    88% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(0, 500px);
+    }
+  }
+</style>

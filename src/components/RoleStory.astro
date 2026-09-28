@@ -1,0 +1,225 @@
+---
+// Work page for a role with a written story (Divvy, Knovel, Mastercard).
+import Base from '../layouts/Base.astro';
+import TopBar from './TopBar.astro';
+import Footer from './Footer.astro';
+import Visual from './Visual.astro';
+import WorkPager from './WorkPager.astro';
+import { roles, stories } from '../data/work';
+import { pageAnim } from '../lib/transitions';
+
+interface Props {
+  id: string;
+}
+const role = roles.find((r) => r.id === Astro.props.id)!;
+const story = stories[Astro.props.id];
+---
+
+<Base title={role.company} description={`${role.title} at ${role.company}. ${story.intro}`}>
+  <TopBar mid />
+  <main id="main" class="page page--mid story" transition:animate={pageAnim}>
+    <header class="head">
+      <span class="mark mark--strong" transition:name={`mark-${role.id}`} aria-hidden="true">{role.mark}</span>
+      <div>
+        <h1 tabindex="-1" data-focus-on-nav>
+          <span class="company" transition:name={`company-${role.id}`}>{role.company}</span>
+        </h1>
+        <p class="role">{role.title} <span class="years">· {story.dates}</span></p>
+      </div>
+    </header>
+    <p class="intro">{story.intro}</p>
+
+    <Visual art={story.art} media={story.media} class="hero" name={`art-${role.id}`} />
+
+    <section class="idea" aria-labelledby="idea-label">
+      <h2 id="idea-label" class="label">The idea</h2>
+      <p class="idea-text">{story.idea}</p>
+    </section>
+
+    <section class="work" aria-labelledby="work-label">
+      <h2 id="work-label" class="label">What I worked on</h2>
+      <div>
+        <ul>
+          {story.work.map((w) => <li>{w}</li>)}
+        </ul>
+        {story.closing && <p class="closing">{story.closing}</p>}
+      </div>
+    </section>
+
+    {
+      role.steps && (
+        <section class="work" aria-labelledby="growth-label">
+          <h2 id="growth-label" class="label">
+            Growth
+          </h2>
+          <ol class="steps">
+            {role.steps.map((s) => (
+              <li>
+                <span class="s-title">{s.title}</span>
+                <span class="s-from">From {s.from}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+
+    <dl class="meta">
+      {
+        story.meta.map((m) => (
+          <div>
+            <dt>{m.label}</dt>
+            <dd>{m.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <WorkPager current={role.id} />
+  </main>
+  <Footer mid />
+</Base>
+
+<style>
+  .story {
+    padding-top: clamp(40px, 8vh, 88px);
+  }
+  .head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .head .mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    font-size: 18px;
+  }
+  h1 {
+    font-size: clamp(1.5rem, 1.2rem + 1.1vw, 1.875rem);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+  .company {
+    display: inline-block;
+  }
+  .role {
+    color: var(--muted);
+    font-size: 15px;
+  }
+  .intro {
+    margin-top: 28px;
+    max-width: 36em;
+    color: var(--ink-2);
+  }
+  .story :global(.hero) {
+    margin-top: clamp(36px, 5vh, 56px);
+    aspect-ratio: 16 / 9.4;
+  }
+
+  .idea {
+    margin-top: clamp(40px, 6vh, 64px);
+    display: grid;
+    grid-template-columns: 11em minmax(0, 1fr);
+    gap: 16px;
+  }
+  .idea-text {
+    max-width: 30em;
+    font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+    line-height: 1.4;
+    letter-spacing: -0.012em;
+    text-wrap: pretty;
+  }
+  .work {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: 11em minmax(0, 1fr);
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+  .label {
+    padding-top: 2px;
+  }
+  .work ul {
+    list-style: none;
+    display: grid;
+    gap: 12px;
+    max-width: 36em;
+  }
+  .work li {
+    position: relative;
+    padding-left: 18px;
+    color: var(--ink-2);
+  }
+  .work ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 6px;
+    height: 1.5px;
+    background: var(--muted);
+  }
+  .closing {
+    margin-top: 20px;
+    max-width: 36em;
+    color: var(--muted);
+  }
+  .steps {
+    max-width: 36em;
+    list-style: none;
+    display: grid;
+    gap: 0;
+    border-left: 1.5px solid var(--line-strong);
+    padding-left: 0;
+  }
+  .steps li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 0 8px 18px;
+    position: relative;
+  }
+  .steps li::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 1.05em;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ink);
+  }
+  .s-title {
+    font-weight: 500;
+  }
+  .s-from {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .meta {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 40px;
+    font-size: 14px;
+  }
+  .meta dt {
+    color: var(--muted);
+  }
+
+  @media (max-width: 720px) {
+    .idea,
+    .work {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+  }
+  @media (max-width: 576px) {
+    .story :global(.hero) {
+      aspect-ratio: 3 / 5;
+    }
+  }
+</style>

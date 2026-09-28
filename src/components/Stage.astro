@@ -9,6 +9,9 @@ import NeighborhoodArt from './art/NeighborhoodArt.astro';
 import CostArt from './art/CostArt.astro';
 import HomeArt from './art/HomeArt.astro';
 import DiscoverArt from './art/DiscoverArt.astro';
+import DivvyArt from './art/DivvyArt.astro';
+import KnovelArt from './art/KnovelArt.astro';
+import MastercardArt from './art/MastercardArt.astro';
 
 const deck = [
   { key: 'map', Art: NeighborhoodArt, cap: 'Neighborhood Search' },
@@ -26,10 +29,7 @@ const ticks = Array.from({ length: axisEnd - axisStart + 1 }, (_, i) => axisStar
 const others = roles.filter((r) => r.id !== 'redfin');
 // Per-role hues for the preview cards only. The site chrome stays monochrome.
 const hues: Record<string, string> = { knovel: '#5b5bd6', divvy: '#12a08a', mastercard: '#f0701f' };
-const monthYear = (s: string) => {
-  const [m, y] = s.split(' ');
-  return Number(y) + ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].indexOf(m) / 12;
-};
+const roleArt: Record<string, any> = { knovel: KnovelArt, divvy: DivvyArt, mastercard: MastercardArt };
 ---
 
 <div class="stage" data-stage data-state="rest" aria-hidden="true">
@@ -48,35 +48,37 @@ const monthYear = (s: string) => {
   </a>
 
   {
-    others.map((r) => (
-      <div class="role" data-for={r.id} style={`--hue: ${hues[r.id] ?? '#687076'}`}>
-        <span class="glyph">{r.mark}</span>
-        <div class="role-text">
-          <p class="role-company">{r.company}</p>
-          <p class="role-title">{r.title}</p>
-        </div>
-        <div class="timeline">
-          <div class="track">
-            {roles.map((o) => (
-              <span
-                class:list={['span', { 'span--on': o.id === r.id }]}
-                style={`left: ${pct(o.span.start)}%; width: ${pct(o.span.end ?? nowYear) - pct(o.span.start)}%`}
-              />
-            ))}
-            {r.steps?.map((s, i) => (
-              <span class="step" style={`left: ${pct(monthYear(s.from))}%; --s: ${i}`}>
-                <span class="step-label">{s.title}</span>
-              </span>
-            ))}
+    others.map((r) => {
+      const RoleArt = roleArt[r.id];
+      return (
+        <div class="role" data-for={r.id} style={`--hue: ${hues[r.id] ?? '#687076'}`}>
+          <div class="role-art" style={`view-transition-name: art-${r.id}`}>
+            <RoleArt />
           </div>
-          <div class="ticks">
-            {ticks.map((t) => (
-              <span style={`left: ${pct(t)}%`}>{t}</span>
-            ))}
+          <div class="role-foot">
+            <div class="role-text">
+              <p class="role-company">{r.company}</p>
+              <p class="role-title">{r.title}</p>
+            </div>
+            <div class="timeline">
+              <div class="track">
+                {roles.map((o) => (
+                  <span
+                    class:list={['span', { 'span--on': o.id === r.id }]}
+                    style={`left: ${pct(o.span.start)}%; width: ${pct(o.span.end ?? nowYear) - pct(o.span.start)}%`}
+                  />
+                ))}
+              </div>
+              <div class="ticks">
+                {ticks.map((t) => (
+                  <span style={`left: ${pct(t)}%`}>{t}</span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    ))
+      );
+    })
   }
 </div>
 
@@ -90,10 +92,13 @@ const monthYear = (s: string) => {
     const map = stage.querySelector<HTMLElement>('.card--map')!;
     let leaveTimer: number | undefined;
 
+    const roleCards = stage.querySelectorAll<HTMLElement>('.role');
     const set = (state: string) => {
       window.clearTimeout(leaveTimer);
       stage.dataset.state = state;
       deck.classList.toggle('is-in', state === 'redfin');
+      // Replay each role's illustration whenever it becomes the active one.
+      roleCards.forEach((card) => card.classList.toggle('is-in', card.dataset.for === state));
     };
     const rest = () => {
       window.clearTimeout(leaveTimer);
@@ -263,8 +268,8 @@ const monthYear = (s: string) => {
     inset: 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: clamp(28px, 4vw, 48px);
+    gap: 24px;
+    padding: 12px 12px clamp(24px, 3vw, 36px);
     border-radius: 18px;
     background:
       radial-gradient(90% 70% at 100% 0%, color-mix(in srgb, var(--hue) 22%, transparent), transparent 65%),
@@ -280,18 +285,19 @@ const monthYear = (s: string) => {
       opacity 360ms var(--ease-out),
       transform 520ms var(--ease-out);
   }
-  .glyph {
-    font-size: clamp(180px, 22vw, 320px);
-    font-weight: 600;
-    line-height: 0.8;
-    letter-spacing: -0.06em;
-    color: color-mix(in srgb, var(--hue) 16%, transparent);
-    -webkit-text-stroke: 1.5px color-mix(in srgb, var(--hue) 70%, transparent);
-    transform: translateY(10px);
-    transition: transform 700ms var(--ease-out);
+  .role-art {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .role-foot {
+    padding-inline: clamp(12px, 2vw, 24px);
   }
   .role-company {
-    font-size: clamp(1.75rem, 1rem + 1.6vw, 2.5rem);
+    font-size: clamp(1.5rem, 1rem + 1.2vw, 2rem);
     font-weight: 500;
     letter-spacing: -0.035em;
     line-height: 1.05;
@@ -301,8 +307,7 @@ const monthYear = (s: string) => {
     color: var(--muted);
   }
   .timeline {
-    margin-top: 32px;
-    padding-top: 84px;
+    margin-top: 22px;
   }
   .track {
     position: relative;
@@ -324,25 +329,6 @@ const monthYear = (s: string) => {
     transform-origin: left;
     transform: scaleX(0);
     transition: transform 700ms var(--ease-out) 120ms;
-  }
-  .step {
-    position: absolute;
-    bottom: 100%;
-    width: 0;
-    height: calc(18px + var(--s) * 22px);
-    border-left: 1.5px solid var(--hue);
-    opacity: 0;
-    transition: opacity 300ms var(--ease-out);
-    transition-delay: calc(500ms + var(--s) * 120ms);
-  }
-  .step-label {
-    position: absolute;
-    top: -2px;
-    left: 6px;
-    font-size: 12px;
-    white-space: nowrap;
-    color: var(--ink);
-    transform: translateY(-50%);
   }
   .ticks {
     position: relative;
@@ -370,17 +356,9 @@ const monthYear = (s: string) => {
     transform: none;
     transition-delay: 80ms;
   }
-  .stage[data-state='knovel'] .role[data-for='knovel'] .glyph,
-  .stage[data-state='divvy'] .role[data-for='divvy'] .glyph,
-  .stage[data-state='mastercard'] .role[data-for='mastercard'] .glyph {
-    transform: none;
-  }
   .stage[data-state='knovel'] .role[data-for='knovel'] .span--on,
   .stage[data-state='divvy'] .role[data-for='divvy'] .span--on,
   .stage[data-state='mastercard'] .role[data-for='mastercard'] .span--on {
     transform: none;
-  }
-  .stage[data-state='mastercard'] .role[data-for='mastercard'] .step {
-    opacity: 1;
   }
 </style>

@@ -10,10 +10,10 @@ import { redfin } from '../data/work';
   <ol class="rows" data-role-list>
     {
       roles.map((r) =>
-        r.href ? (
+        r.featured ? (
           <li data-role={r.id}>
             <a class="row row--open" href={r.href}>
-              <Visual art={redfin.featured.art} media={redfin.featured.media} class="row-visual" name="art-neighborhood" />
+              <Visual art={redfin.featured.art} media={redfin.featured.media} class="row-visual" name="art-neighborhood" decorative />
               <span class="mark mark--strong" transition:name={`mark-${r.id}`} aria-hidden="true">{r.mark}</span>
               <span class="main">
                 <span class="company" transition:name={`company-${r.id}`}>{r.company}</span>
@@ -33,13 +33,18 @@ import { redfin } from '../data/work';
             </a>
           </li>
         ) : (
-          <li class="row" data-role={r.id}>
-            <span class="mark" aria-hidden="true">{r.mark}</span>
-            <span class="main">
-              <span class="company">{r.company}</span>
-              <span class="title">{r.title}</span>
-            </span>
-            <span class="years">{r.years}</span>
+          <li data-role={r.id}>
+            <a class="row row--link" href={r.href}>
+              <span class="mark" transition:name={`mark-${r.id}`} aria-hidden="true">{r.mark}</span>
+              <span class="main">
+                <span class="company" transition:name={`company-${r.id}`}>{r.company}</span>
+                <span class="title">{r.title}</span>
+              </span>
+              <span class="years">
+                {r.years}
+                <Arrow dir="right" />
+              </span>
+            </a>
           </li>
         ),
       )
@@ -86,7 +91,40 @@ import { redfin } from '../data/work';
     padding-top: 2px;
   }
 
-  /* The one explorable row. It gets a surface and extra room so it reads as
+  /* Quieter linked rows: a soft wash on hover, the arrow nudges. */
+  .row--link {
+    margin-inline: -12px;
+    padding-inline: 12px;
+    border-radius: 12px;
+    transition: background-color 200ms var(--ease-out);
+  }
+  .row--link .years {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .row--link .years :global(svg) {
+    width: 11px;
+    height: 11px;
+    color: var(--muted);
+    transition:
+      transform 220ms var(--ease-out),
+      color 200ms var(--ease-out);
+  }
+  @media (hover: hover) {
+    .row--link:hover {
+      background: var(--surface-2);
+    }
+    .row--link:hover .mark {
+      background: var(--surface);
+    }
+    .row--link:hover .years :global(svg) {
+      transform: translateX(3px);
+      color: var(--ink);
+    }
+  }
+
+  /* The featured row. It gets a surface and extra room so it reads as
      the lead entry without a separate hero. */
   .row--open {
     grid-template-areas:

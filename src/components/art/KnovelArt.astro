@@ -1,0 +1,465 @@
+---
+// Knovel Protocol: author royalties across the on-chain / application boundary.
+// Conceptual only. No specific chain, token, or contract code is implied.
+const lock = 'M-6 -1 V-5 A6 6 0 0 1 6 -5 V-1 M-8 -1 H8 V9 H-8 Z';
+const check = 'M-5 0 L-1.5 3.5 L5 -3.5';
+const person = 'M0 -14 A9 9 0 1 1 0.01 -14 Z M-17 20 C-15 6 15 6 17 20 Z';
+---
+
+<div class="kn-art">
+  <!-- Wide -->
+  <svg class="wide" viewBox="0 0 1200 680" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <marker id="kn-arr-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M1 1 L9 5 L1 9" class="arrowhead" />
+      </marker>
+      <marker id="kn-arr-gold-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M1 1 L9 5 L1 9" class="arrowhead gold" />
+      </marker>
+    </defs>
+
+    <!-- Author and work -->
+    <g class="pop" style="--d: 100ms">
+      <circle cx="160" cy="150" r="46" class="avatar" />
+      <path transform="translate(160 152)" d={person} class="avatar-glyph" />
+      <text x="160" y="228" text-anchor="middle" class="t-node">Author</text>
+    </g>
+    <g class="pop" style="--d: 220ms">
+      <rect x="95" y="290" width="138" height="184" rx="8" class="page-edge" />
+      <rect x="95" y="290" width="130" height="184" rx="8" class="cover" />
+      <rect x="95" y="290" width="14" height="184" rx="4" class="spine" />
+      <rect x="126" y="328" width="78" height="10" rx="5" class="cover-line" />
+      <rect x="126" y="348" width="54" height="8" rx="4" class="cover-line faint" />
+      <text x="164" y="508" text-anchor="middle" class="t-small">Published work</text>
+    </g>
+    <path class="link pop" style="--d: 500ms" d="M238 382 H390" />
+
+    <!-- On-chain zone -->
+    <rect class="zone pop" x="360" y="40" width="380" height="600" rx="26" />
+    <g class="pop">
+      <path transform="translate(392 72)" d={lock} class="lock" />
+      <text x="410" y="80" class="t-label strong">On-chain</text>
+      <text x="386" y="620" class="t-small">Immutable once confirmed</text>
+    </g>
+    <g class="pop" style="--d: 350ms">
+      <rect x="390" y="150" width="320" height="290" rx="18" class="card" />
+      <text x="414" y="190" class="t-node">Royalty contract</text>
+      {[0, 1, 2].map((i) => (
+        <g>
+          <rect x={414 + i * 96} y="214" width="72" height="52" rx="9" class="block" />
+          <rect x={426 + i * 96} y="230" width="46" height="7" rx="3.5" class="block-line" />
+          <rect x={426 + i * 96} y="244" width="30" height="7" rx="3.5" class="block-line" />
+          {i < 2 && <path d={`M${486 + i * 96} 240 H${510 + i * 96}`} class="chain" />}
+        </g>
+      ))}
+      <text x="414" y="292" class="t-small">Transactions</text>
+      <rect x="414" y="318" width="170" height="18" rx="9" class="split split-a" />
+      <rect x="588" y="318" width="56" height="18" rx="9" class="split split-b" />
+      <rect x="648" y="318" width="38" height="18" rx="9" class="split split-c" />
+      <text x="414" y="362" class="t-small">Royalty split</text>
+      <rect x="414" y="384" width="272" height="34" rx="10" class="state" />
+      <text x="428" y="406" class="t-mono">state transition</text>
+    </g>
+
+    <!-- Boundary crossing -->
+    <path class="flow draw" style="--d: 900ms" d="M710 230 C760 230 760 190 800 190" pathLength="1" marker-end="url(#kn-arr-w)" />
+    <g class="pop" style="--d: 900ms">
+      <rect x="690" y="244" width="112" height="28" rx="14" class="chip" />
+      <text x="746" y="263" text-anchor="middle" class="t-chip">on-chain event</text>
+    </g>
+
+    <!-- Application layer -->
+    <text x="800" y="80" class="t-label strong pop">Application</text>
+    <g class="pop" style="--d: 600ms">
+      <rect x="800" y="120" width="344" height="136" rx="18" class="card" />
+      <text x="824" y="160" class="t-node">Backend services</text>
+      {[0, 1, 2].map((i) => (
+        <g>
+          <circle cx="830" cy={188 + i * 22} r="4.5" class="ok" />
+          <rect x="844" y={184 + i * 22} width={150 - i * 34} height="8" rx="4" class="skel" />
+        </g>
+      ))}
+      <g transform="translate(1104 162)" class="sync-icon">
+        <path d="M-10 -2 A10 10 0 0 1 8 -6 M10 2 A10 10 0 0 1 -8 6" />
+        <path d="M4 -9 L8 -6 L5 -2 M-4 9 L-8 6 L-5 2" />
+      </g>
+    </g>
+    <path class="flow draw" style="--d: 1250ms" d="M972 256 V322" pathLength="1" marker-end="url(#kn-arr-w)" />
+    <text x="986" y="296" class="t-small pop" style="--d: 1250ms">sync</text>
+    <g class="pop" style="--d: 800ms">
+      <rect x="842" y="322" width="260" height="300" rx="20" class="card" />
+      <path d="M842 358 H1102" class="divider" />
+      <circle cx="864" cy="340" r="4" class="win-dot" />
+      <circle cx="878" cy="340" r="4" class="win-dot" />
+      <circle cx="892" cy="340" r="4" class="win-dot" />
+      <circle cx="878" cy="394" r="16" class="mini-avatar" />
+      <rect x="904" y="384" width="120" height="9" rx="4.5" class="skel strong" />
+      <rect x="904" y="400" width="80" height="7" rx="3.5" class="skel" />
+      <rect x="864" y="432" width="216" height="8" rx="4" class="skel" />
+      <rect x="864" y="448" width="170" height="8" rx="4" class="skel" />
+    </g>
+    <g class="pop received" style="--d: 1500ms">
+      <rect x="862" y="484" width="220" height="56" rx="14" class="received-box" />
+      <circle cx="890" cy="512" r="12" class="received-dot" />
+      <path transform="translate(890 512)" d={check} class="received-check" />
+      <text x="912" y="518" class="t-node small">Royalty received</text>
+    </g>
+
+    <!-- Royalty back to the author -->
+    <path class="royalty draw" style="--d: 1650ms" d="M390 250 C310 250 280 170 214 160" pathLength="1" marker-end="url(#kn-arr-gold-w)" />
+    <g class="pop" style="--d: 1650ms">
+      <rect x="262" y="196" width="84" height="28" rx="14" class="chip gold-chip" />
+      <text x="304" y="215" text-anchor="middle" class="t-chip gold-t">royalty</text>
+    </g>
+  </svg>
+
+  <!-- Tall -->
+  <svg class="tall" viewBox="0 0 600 1060" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <marker id="kn-arr-t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M1 1 L9 5 L1 9" class="arrowhead" />
+      </marker>
+      <marker id="kn-arr-gold-t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M1 1 L9 5 L1 9" class="arrowhead gold" />
+      </marker>
+    </defs>
+
+    <g class="pop" style="--d: 100ms">
+      <circle cx="150" cy="110" r="42" class="avatar" />
+      <path transform="translate(150 112)" d={person} class="avatar-glyph" />
+      <text x="150" y="184" text-anchor="middle" class="t-node">Author</text>
+    </g>
+    <g class="pop" style="--d: 220ms">
+      <rect x="380" y="40" width="116" height="150" rx="8" class="page-edge" />
+      <rect x="380" y="40" width="110" height="150" rx="8" class="cover" />
+      <rect x="380" y="40" width="12" height="150" rx="4" class="spine" />
+      <rect x="406" y="72" width="64" height="9" rx="4.5" class="cover-line" />
+      <rect x="406" y="90" width="44" height="7" rx="3.5" class="cover-line faint" />
+      <text x="366" y="120" text-anchor="end" class="t-small">Published work</text>
+    </g>
+    <path class="link pop" style="--d: 500ms" d="M435 190 V306" />
+
+    <rect class="zone pop" x="24" y="250" width="552" height="380" rx="26" />
+    <g class="pop">
+      <path transform="translate(54 282)" d={lock} class="lock" />
+      <text x="72" y="290" class="t-label strong">On-chain</text>
+      <text x="552" y="290" text-anchor="end" class="t-small">Immutable once confirmed</text>
+    </g>
+    <g class="pop" style="--d: 350ms">
+      <rect x="56" y="306" width="488" height="290" rx="18" class="card" />
+      <text x="80" y="344" class="t-node">Royalty contract</text>
+      {[0, 1, 2].map((i) => (
+        <g>
+          <rect x={80 + i * 150} y="366" width="120" height="52" rx="9" class="block" />
+          <rect x={94 + i * 150} y="382" width="80" height="7" rx="3.5" class="block-line" />
+          <rect x={94 + i * 150} y="396" width="52" height="7" rx="3.5" class="block-line" />
+          {i < 2 && <path d={`M${200 + i * 150} 392 H${230 + i * 150}`} class="chain" />}
+        </g>
+      ))}
+      <text x="80" y="444" class="t-small">Transactions</text>
+      <rect x="80" y="466" width="270" height="18" rx="9" class="split split-a" />
+      <rect x="354" y="466" width="90" height="18" rx="9" class="split split-b" />
+      <rect x="448" y="466" width="72" height="18" rx="9" class="split split-c" />
+      <text x="80" y="510" class="t-small">Royalty split</text>
+      <rect x="80" y="530" width="440" height="36" rx="10" class="state" />
+      <text x="96" y="553" class="t-mono">state transition</text>
+    </g>
+
+    <path class="flow draw" style="--d: 900ms" d="M300 596 V690" pathLength="1" marker-end="url(#kn-arr-t)" />
+    <g class="pop" style="--d: 900ms">
+      <rect x="316" y="616" width="120" height="28" rx="14" class="chip" />
+      <text x="376" y="635" text-anchor="middle" class="t-chip">on-chain event</text>
+    </g>
+
+    <text x="48" y="676" class="t-label strong pop">Application</text>
+    <g class="pop" style="--d: 600ms">
+      <rect x="56" y="690" width="488" height="110" rx="18" class="card" />
+      <text x="80" y="728" class="t-node">Backend services</text>
+      {[0, 1].map((i) => (
+        <g>
+          <circle cx="86" cy={752 + i * 22} r="4.5" class="ok" />
+          <rect x="100" y={748 + i * 22} width={200 - i * 50} height="8" rx="4" class="skel" />
+        </g>
+      ))}
+      <g transform="translate(508 732)" class="sync-icon">
+        <path d="M-10 -2 A10 10 0 0 1 8 -6 M10 2 A10 10 0 0 1 -8 6" />
+        <path d="M4 -9 L8 -6 L5 -2 M-4 9 L-8 6 L-5 2" />
+      </g>
+    </g>
+    <path class="flow draw" style="--d: 1250ms" d="M300 800 V850" pathLength="1" marker-end="url(#kn-arr-t)" />
+    <text x="314" y="830" class="t-small pop" style="--d: 1250ms">sync</text>
+    <g class="pop" style="--d: 800ms">
+      <rect x="130" y="850" width="340" height="190" rx="20" class="card" />
+      <path d="M130 884 H470" class="divider" />
+      <circle cx="152" cy="867" r="4" class="win-dot" />
+      <circle cx="166" cy="867" r="4" class="win-dot" />
+      <circle cx="180" cy="867" r="4" class="win-dot" />
+      <rect x="152" y="904" width="150" height="9" rx="4.5" class="skel strong" />
+      <rect x="152" y="920" width="100" height="7" rx="3.5" class="skel" />
+    </g>
+    <g class="pop received" style="--d: 1500ms">
+      <rect x="152" y="948" width="296" height="56" rx="14" class="received-box" />
+      <circle cx="180" cy="976" r="12" class="received-dot" />
+      <path transform="translate(180 976)" d={check} class="received-check" />
+      <text x="202" y="982" class="t-node small">Royalty received</text>
+    </g>
+
+    <path class="royalty draw" style="--d: 1650ms" d="M56 420 C0 380 4 200 104 136" pathLength="1" marker-end="url(#kn-arr-gold-t)" />
+    <g class="pop" style="--d: 1650ms">
+      <rect x="10" y="232" width="84" height="28" rx="14" class="chip gold-chip" />
+      <text x="52" y="251" text-anchor="middle" class="t-chip gold-t">royalty</text>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .kn-art {
+    --indigo: #5b5bd6;
+    --deep: #3b37a3;
+    --lav: #e6e4fb;
+    --gold: #cf8f22;
+    --cream: #f6efe2;
+    --edge: #7c7aa6;
+    position: absolute;
+    inset: 0;
+    container-type: inline-size;
+    background:
+      radial-gradient(70% 70% at 0% 0%, rgba(207, 143, 34, 0.1), transparent 60%),
+      radial-gradient(80% 80% at 100% 100%, rgba(91, 91, 214, 0.14), transparent 60%),
+      #f3f2fb;
+  }
+  @media (prefers-color-scheme: dark) {
+    .kn-art {
+      --indigo: #8f8ff0;
+      --deep: #4e49c4;
+      --lav: #2d2b4d;
+      --gold: #f0b54d;
+      --cream: #efe3cc;
+      --edge: #8e8cb8;
+      background:
+        radial-gradient(80% 80% at 100% 100%, rgba(143, 143, 240, 0.12), transparent 60%),
+        #1a1a26;
+    }
+  }
+  svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 3%;
+  }
+  .tall {
+    display: none;
+  }
+  @container (max-width: 520px) {
+    .wide {
+      display: none;
+    }
+    .tall {
+      display: block;
+    }
+  }
+
+  .avatar {
+    fill: var(--lav);
+    stroke: var(--indigo);
+    stroke-width: 2;
+  }
+  .avatar-glyph {
+    fill: var(--indigo);
+  }
+  .cover {
+    fill: var(--deep);
+  }
+  .spine {
+    fill: color-mix(in srgb, var(--deep) 70%, black);
+  }
+  .page-edge {
+    fill: var(--cream);
+    stroke: color-mix(in srgb, var(--cream) 70%, black);
+    stroke-width: 1;
+  }
+  .cover-line {
+    fill: var(--cream);
+  }
+  .cover-line.faint {
+    opacity: 0.6;
+  }
+  .zone {
+    fill: color-mix(in srgb, var(--indigo) 8%, transparent);
+    stroke: color-mix(in srgb, var(--indigo) 45%, transparent);
+    stroke-width: 1.5;
+    stroke-dasharray: 7 7;
+  }
+  .lock {
+    fill: none;
+    stroke: var(--indigo);
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+  .card {
+    fill: var(--surface);
+    stroke: var(--line);
+    stroke-width: 1.5;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.07));
+  }
+  .block {
+    fill: var(--lav);
+    stroke: color-mix(in srgb, var(--indigo) 35%, transparent);
+    stroke-width: 1.2;
+  }
+  .block-line {
+    fill: color-mix(in srgb, var(--indigo) 45%, transparent);
+  }
+  .chain {
+    stroke: var(--indigo);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  .split-a {
+    fill: var(--indigo);
+  }
+  .split-b {
+    fill: color-mix(in srgb, var(--indigo) 45%, var(--surface));
+  }
+  .split-c {
+    fill: color-mix(in srgb, var(--indigo) 22%, var(--surface));
+  }
+  .state {
+    fill: var(--surface-2);
+  }
+  .t-mono {
+    font: 500 14px ui-monospace, 'SF Mono', Menlo, monospace;
+    fill: var(--muted);
+  }
+  .link {
+    fill: none;
+    stroke: var(--edge);
+    stroke-width: 2;
+    stroke-dasharray: 3 6;
+    stroke-linecap: round;
+  }
+  .flow {
+    fill: none;
+    stroke: var(--indigo);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  .royalty {
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+  .arrowhead {
+    fill: none;
+    stroke: var(--indigo);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .arrowhead.gold {
+    stroke: var(--gold);
+  }
+  .chip {
+    fill: var(--surface);
+    stroke: color-mix(in srgb, var(--indigo) 50%, transparent);
+    stroke-width: 1.2;
+  }
+  .gold-chip {
+    stroke: var(--gold);
+  }
+  .t-chip {
+    font: 600 13px var(--font);
+    fill: var(--indigo);
+  }
+  .gold-t {
+    fill: var(--gold);
+  }
+  .ok {
+    fill: #2e9d57;
+  }
+  .skel {
+    fill: var(--surface-2);
+  }
+  .skel.strong {
+    fill: var(--line-strong);
+    opacity: 0.5;
+  }
+  .divider {
+    stroke: var(--line);
+    stroke-width: 1.5;
+  }
+  .win-dot {
+    fill: var(--line-strong);
+    opacity: 0.6;
+  }
+  .mini-avatar {
+    fill: var(--lav);
+  }
+  .sync-icon path {
+    fill: none;
+    stroke: var(--indigo);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .received-box {
+    fill: color-mix(in srgb, var(--gold) 14%, var(--surface));
+    stroke: color-mix(in srgb, var(--gold) 55%, transparent);
+    stroke-width: 1.2;
+  }
+  .received-dot {
+    fill: var(--gold);
+  }
+  .received-check {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .t-node {
+    font: 500 19px var(--font);
+    fill: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .t-node.small {
+    font-size: 17px;
+  }
+  .t-small {
+    font: 500 14px var(--font);
+    fill: var(--muted);
+  }
+  .t-label {
+    font: 500 14px var(--font);
+    fill: var(--muted);
+  }
+  .t-label.strong {
+    fill: var(--indigo);
+    font-weight: 600;
+  }
+
+  .pop {
+    opacity: 0;
+    transform: translateY(8px);
+    transform-box: fill-box;
+    transition:
+      opacity 500ms var(--ease-out),
+      transform 600ms var(--ease-out);
+    transition-delay: var(--d, 0ms);
+  }
+  .draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 800ms var(--ease-in-out);
+    transition-delay: var(--d, 0ms);
+  }
+  :global(.is-in) .pop {
+    opacity: 1;
+    transform: none;
+  }
+  :global(.is-in) .draw {
+    stroke-dashoffset: 0;
+  }
+</style>

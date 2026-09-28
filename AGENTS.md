@@ -31,4 +31,3 @@ Consult these guides before working on related tasks:
 - The homepage Stage (`src/components/Stage.astro`) is decorative and aria-hidden; every fact it shows must also be in the work index.
 - Page transitions use Astro's ClientRouter. Shared elements use `transition:name` (`mark-<id>`, `company-<id>`); page bodies use `pageAnim` from `src/lib/transitions.ts`. Scripts must listen for `astro:page-load`, not run once.
 - Every animation must respect `prefers-reduced-motion` (global override in `global.css`).
-- `src/versions/a/` is a frozen copy of the first layout served at `/a/` for comparison. Don't edit it or import from it in version B.

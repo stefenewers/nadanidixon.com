@@ -11,7 +11,7 @@ Where: `src/components/Intro.astro`
 Where: `roles` in `src/data/work.ts`
 - [ ] Redfin title: LinkedIn says "Software Engineer", the original brief said "Software Engineer II". The site uses II. Which is right?
 - [ ] Knovel overlaps Redfin until July 2025. Fine to show years only?
-- [ ] Knovel, Divvy, Mastercard: is there a verified project story for any of them? If so, it can get its own detail page like Redfin (add `href` to that role and a page under `src/pages/work/`).
+- [ ] Knovel, Divvy, and Mastercard now have their own pages. See section 6.
 
 ## 3. Neighborhood Search (featured)
 Where: `redfin.featured` in `src/data/work.ts`
@@ -32,3 +32,37 @@ Where: `src/data/site.ts`
 - [ ] Résumé PDF. Put it in `public/` and set `resume`.
 - [ ] Whether she wants a public email address. Set `email`.
   Neither link renders until it's set.
+
+## 6. Divvy, Knovel, Mastercard stories
+Where: `stories` in `src/data/work.ts`, illustrations in `src/components/art/DivvyArt.astro`, `KnovelArt.astro`, `MastercardArt.astro`. Pages: `/work/divvy-homes`, `/work/knovel-protocol`, `/work/mastercard`.
+
+Everything below is written from the content brief. Please confirm each line before a wider launch.
+
+### Divvy Homes
+- [ ] Dates shown as Apr 2024 to Jan 2025, title Senior Software Engineer.
+- [ ] Copy says she built internal systems for asset turnover, customer transitions and move-outs, and realtor and prospective-buyer workflows. Is "built" accurate, or should it be "worked on" or "helped build" for any of these?
+- [ ] "I modeled those operational rules as Temporal workflows" (implied in the idea paragraph and listed in the bullets). Was this her design, shared, or a team pattern she worked within?
+- [ ] "A winterization workflow for asset management": did she build it end to end?
+- [ ] SQL dashboards "helped operations teams look at property conditions, repair costs, and system performance."
+- [ ] "I worked across the whole path: requirements, architecture, TypeScript implementation, testing, and deployment."
+- [ ] Illustration: the states **Move-out, Turnover, Winterize, Ready, Buyers**, the actors **Resident, Ops team, Realtor**, the "when needed" branch, and the "retry" loop are illustrative. Are they a fair simplification, or misleading about how Divvy actually worked? Rename anything that would read as wrong to a former colleague.
+- [ ] Not on the site, pending her OK: 20% fewer unexpected move-outs, 5% faster transactions, $3.75M lower repair costs. If she wants them, we need how each was measured, her share of the credit, and permission to share.
+
+### Knovel Protocol
+- [ ] Dates shown as Aug 2024 to Jul 2025, title Founding Engineer. (Overlaps Redfin until Jul 2025.)
+- [ ] Product description: "a Web3 literary publishing platform, built around a different relationship between authors and readers when it comes to publishing, ownership, and pay." Accurate and OK to say publicly? Is the company still operating (the site uses past tense "was")?
+- [ ] "Architected smart-contract infrastructure for author royalty distribution": is "architected" hers alone?
+- [ ] Transaction sequencing, state transitions, failure conditions; security, gas efficiency, maintainability; backend services syncing on-chain events with a clear boundary. All from the brief; confirm wording.
+- [ ] Illustration: the **royalty split** bar (author gets the largest share), the "**Royalty received**" notification in the app, "**Immutable once confirmed**", and the generic "**state transition**" row are conceptual. Does the split visual misstate how royalties worked?
+- [ ] Not on the site, pending her OK: the Ethereum/IPFS NFT marketplace, and any token incentives or digital-rights features. The site also avoids naming a specific chain.
+
+### Mastercard
+- [ ] Dates shown as May 2020 to Apr 2024, with SWE I from May 2020, SWE II from Feb 2022, Senior from Jan 2024.
+- [ ] "A high-traffic expense-management platform that helps businesses manage company-card spending." OK to describe it this way? Should the product be named?
+- [ ] REST APIs in Java and Spring Boot; relational data models; event-driven microservices with Kafka; leading backend work and mentoring junior engineers.
+- [ ] "Every purchase on a company card is an event that several services need to agree on" is our framing of the system. Is it accurate?
+- [ ] Illustration: one **spend event → REST API → Kafka event stream → three services "in sync"**, some with databases. Service boxes are intentionally unnamed. The card drawing is generic (no Mastercard branding).
+- [ ] Not on the site, pending verification: 50+ banks, 500K+ users, 99.99% uptime, leading five engineers, and any revenue figures (the résumé's "revenue potential" should not become realized revenue).
+
+### Visual colors
+- [ ] The role hues (indigo for Knovel, teal for Divvy, orange for Mastercard) are ours, not the companies' brand colors. Fine as is?

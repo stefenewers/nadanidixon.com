@@ -11,12 +11,6 @@ npm run build    # outputs to dist/
 npm run preview
 ```
 
-## Layout comparison (A/B)
-
-- `/` is version B, the current homepage.
-- `/a/` is version A, the first deployed layout, kept for comparison (noindex, canonical points to `/`). Its source is frozen in `src/versions/a/` with its own styles and data.
-- A floating "Layout A | B" tab (`src/components/LayoutSwitch.astro`) switches between them. To retire the comparison, delete `src/pages/a/`, `src/versions/a/`, and the `layoutSwitch` prop on `src/pages/index.astro`.
-
 ## Where things live
 
 | What | Where |
@@ -25,6 +19,7 @@ npm run preview
 | Homepage intro | `src/components/Intro.astro` |
 | Work index, Redfin page copy, education | `src/data/work.ts` |
 | Redfin detail page | `src/pages/work/redfin.astro` |
+| Divvy, Knovel, Mastercard pages | `src/pages/work/*.astro` → `src/components/RoleStory.astro`, copy in `stories` in `src/data/work.ts` |
 | Case studies (Markdown) | `src/content/work/*.md` |
 | Homepage hover stage | `src/components/Stage.astro` |
 | Drawn visuals | `src/components/art/` |

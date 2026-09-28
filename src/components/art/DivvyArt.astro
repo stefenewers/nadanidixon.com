@@ -1,0 +1,448 @@
+---
+// Divvy Homes: a home moving through an operational workflow.
+// Conceptual only. The states are illustrative, not Divvy's actual sequence.
+// Two compositions: wide (desktop) and tall (narrow frames), picked by a
+// container query so labels stay legible at any size.
+
+interface Node {
+  id: string;
+  x: number;
+  y: number;
+  label: string;
+  actor: string;
+  tone: 'amber' | 'teal' | 'ice' | 'green';
+  snow?: boolean;
+}
+
+const W = { w: 180, h: 80 };
+const wideNodes: Node[] = [
+  { id: 'mo', x: 60, y: 130, label: 'Move-out', actor: 'Resident', tone: 'amber' },
+  { id: 'tu', x: 300, y: 130, label: 'Turnover', actor: 'Ops team', tone: 'teal' },
+  { id: 're', x: 540, y: 130, label: 'Ready', actor: 'Ops team', tone: 'green' },
+  { id: 'wi', x: 300, y: 390, label: 'Winterize', actor: 'Ops team', tone: 'ice', snow: true },
+  { id: 'bu', x: 540, y: 390, label: 'Buyers', actor: 'Realtor', tone: 'teal' },
+];
+const wideEdges = [
+  { d: 'M240 170 H300', k: 0 },
+  { d: 'M480 170 H540', k: 1 },
+  { d: 'M390 210 V390', k: 1 },
+  { d: 'M480 430 C540 430 560 300 600 210', k: 2 },
+  { d: 'M660 210 V390', k: 3 },
+];
+
+const T = { w: 210, h: 76 };
+const tallNodes: Node[] = [
+  { id: 'mo', x: 56, y: 86, label: 'Move-out', actor: 'Resident', tone: 'amber' },
+  { id: 'tu', x: 56, y: 206, label: 'Turnover', actor: 'Ops team', tone: 'teal' },
+  { id: 'wi', x: 330, y: 206, label: 'Winterize', actor: 'Ops team', tone: 'ice', snow: true },
+  { id: 're', x: 56, y: 330, label: 'Ready', actor: 'Ops team', tone: 'green' },
+  { id: 'bu', x: 56, y: 454, label: 'Buyers', actor: 'Realtor', tone: 'teal' },
+];
+const tallEdges = [
+  { d: 'M161 162 V206', k: 0 },
+  { d: 'M266 244 H330', k: 1 },
+  { d: 'M161 282 V330', k: 1 },
+  { d: 'M435 282 C435 330 330 368 266 368', k: 2 },
+  { d: 'M161 406 V454', k: 3 },
+];
+
+const bars = [70, 110, 55, 130, 90, 120];
+const barTones = ['amber', 'teal', 'ice', 'green', 'teal', 'green'];
+const rows = [
+  { tone: 'teal', state: 'Turnover' },
+  { tone: 'ice', state: 'Winterize' },
+  { tone: 'green', state: 'Ready' },
+  { tone: 'amber', state: 'Move-out' },
+  { tone: 'teal', state: 'Buyers' },
+];
+
+const snowflake =
+  'M0 -9 V9 M-7.8 -4.5 L7.8 4.5 M-7.8 4.5 L7.8 -4.5 M-2.5 -7 L0 -4.5 L2.5 -7 M-2.5 7 L0 4.5 L2.5 7';
+const house = 'M-8 4 V-2 L0 -8 L8 -2 V4 Z';
+---
+
+<div class="dv-art">
+  <!-- Wide -->
+  <svg class="wide" viewBox="0 0 1200 660" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <marker id="dv-arr-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M1 1 L9 5 L1 9" class="arrowhead" />
+      </marker>
+    </defs>
+
+    <rect class="region pop" x="36" y="48" width="708" height="460" rx="22" />
+    <text class="t-label pop" x="60" y="84">Temporal workflow</text>
+
+    <path class="loop pop" style="--d: 900ms" d="M352 130 C352 78 428 78 428 130" marker-end="url(#dv-arr-w)" />
+    <text class="t-small pop" style="--d: 900ms" x="390" y="70" text-anchor="middle">retry</text>
+
+    {wideEdges.map((e) => (
+      <path class="edge draw" style={`--d: ${300 + e.k * 220}ms`} d={e.d} pathLength="1" marker-end="url(#dv-arr-w)" />
+    ))}
+    <g class="pop" style="--d: 700ms">
+      <rect class="cond" x="398" y="284" width="118" height="30" rx="15" />
+      <text class="t-small" x="457" y="304" text-anchor="middle">when needed</text>
+    </g>
+
+    {wideNodes.map((n, i) => (
+      <g class={`node pop tone-${n.tone}`} style={`--d: ${120 + i * 110}ms`}>
+        <rect x={n.x} y={n.y} width={W.w} height={W.h} rx="16" class="node-box" />
+        <rect x={n.x} y={n.y + 18} width="4" height={W.h - 36} rx="2" class="node-tick" />
+        <text class="t-node" x={n.x + 22} y={n.y + 35}>{n.label}</text>
+        <text class="t-small" x={n.x + 22} y={n.y + 60}>{n.actor}</text>
+        {n.snow && <path class="snow" transform={`translate(${n.x + 152} ${n.y + 28})`} d={snowflake} />}
+      </g>
+    ))}
+
+    <g class="token token-w">
+      <circle cx="222" cy="128" r="18" class="token-bg" />
+      <path transform="translate(222 129)" d={house} class="token-house" />
+    </g>
+
+    <path class="link pop" style="--d: 1100ms" d="M744 280 H820" />
+    <g class="pop" style="--d: 1100ms">
+      <rect class="sql" x="752" y="266" width="58" height="28" rx="14" />
+      <text class="t-small sql-t" x="781" y="285" text-anchor="middle">SQL</text>
+    </g>
+
+    <g class="pop" style="--d: 1000ms">
+      <rect class="panel" x="820" y="48" width="344" height="572" rx="22" />
+      <text class="t-label" x="846" y="84">Operations view</text>
+      <text class="t-node" x="846" y="114">Homes by state</text>
+      <path class="axis" d="M850 290 H1134" />
+      {bars.map((h, i) => (
+        <rect
+          class={`bar tone-${barTones[i]}`}
+          style={`--d: ${1250 + i * 70}ms`}
+          x={856 + i * 46}
+          y={290 - h}
+          width="30"
+          height={h}
+          rx="6"
+        />
+      ))}
+      {rows.map((r, i) => (
+        <g class={`tone-${r.tone}`}>
+          <circle cx="858" cy={336 + i * 52} r="6" class="dot" />
+          <rect x="876" y={328 + i * 52} width="120" height="9" rx="4.5" class="skel skel-strong" />
+          <rect x="876" y={344 + i * 52} width="80" height="7" rx="3.5" class="skel" />
+          <rect x="1040" y={322 + i * 52} width="100" height="26" rx="13" class="pill" />
+          <text x="1090" y={340 + i * 52} text-anchor="middle" class="t-pill">{r.state}</text>
+        </g>
+      ))}
+    </g>
+  </svg>
+
+  <!-- Tall -->
+  <svg class="tall" viewBox="0 0 600 1000" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <marker id="dv-arr-t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M1 1 L9 5 L1 9" class="arrowhead" />
+      </marker>
+    </defs>
+
+    <rect class="region pop" x="24" y="24" width="552" height="560" rx="22" />
+    <text class="t-label pop" x="48" y="60">Temporal workflow</text>
+
+    <path class="loop pop" style="--d: 900ms" d="M56 226 C26 226 26 262 56 262" marker-end="url(#dv-arr-t)" />
+    <text class="t-small pop" style="--d: 900ms" x="40" y="212" text-anchor="middle">retry</text>
+
+    {tallEdges.map((e) => (
+      <path class="edge draw" style={`--d: ${300 + e.k * 220}ms`} d={e.d} pathLength="1" marker-end="url(#dv-arr-t)" />
+    ))}
+
+    {tallNodes.map((n, i) => (
+      <g class={`node pop tone-${n.tone}`} style={`--d: ${120 + i * 110}ms`}>
+        <rect x={n.x} y={n.y} width={T.w} height={T.h} rx="16" class="node-box" />
+        <rect x={n.x} y={n.y + 18} width="4" height={T.h - 36} rx="2" class="node-tick" />
+        <text class="t-node" x={n.x + 22} y={n.y + 34}>{n.label}</text>
+        <text class="t-small" x={n.x + 22} y={n.y + 58}>{n.actor}</text>
+        {n.snow && <path class="snow" transform={`translate(${n.x + 182} ${n.y + 28})`} d={snowflake} />}
+      </g>
+    ))}
+
+    <g class="token token-t">
+      <circle cx="262" cy="86" r="18" class="token-bg" />
+      <path transform="translate(262 87)" d={house} class="token-house" />
+    </g>
+
+    <path class="link pop" style="--d: 1100ms" d="M300 584 V630" />
+    <g class="pop" style="--d: 1100ms">
+      <rect class="sql" x="271" y="593" width="58" height="28" rx="14" />
+      <text class="t-small sql-t" x="300" y="612" text-anchor="middle">SQL</text>
+    </g>
+
+    <g class="pop" style="--d: 1000ms">
+      <rect class="panel" x="24" y="630" width="552" height="350" rx="22" />
+      <text class="t-label" x="48" y="666">Operations view</text>
+      <text class="t-node" x="48" y="696">Homes by state</text>
+      <path class="axis" d="M48 810 H552" />
+      {bars.map((h, i) => (
+        <rect
+          class={`bar tone-${barTones[i]}`}
+          style={`--d: ${1250 + i * 70}ms`}
+          x={60 + i * 80}
+          y={810 - h * 0.8}
+          width="52"
+          height={h * 0.8}
+          rx="7"
+        />
+      ))}
+      {rows.slice(0, 3).map((r, i) => (
+        <g class={`tone-${r.tone}`}>
+          <circle cx="56" cy={850 + i * 42} r="6" class="dot" />
+          <rect x="74" y={842 + i * 42} width="170" height="9" rx="4.5" class="skel skel-strong" />
+          <rect x="74" y={858 + i * 42} width="110" height="7" rx="3.5" class="skel" />
+          <rect x="430" y={836 + i * 42} width="118" height="28" rx="14" class="pill" />
+          <text x="489" y={855 + i * 42} text-anchor="middle" class="t-pill">{r.state}</text>
+        </g>
+      ))}
+    </g>
+  </svg>
+</div>
+
+<style>
+  .dv-art {
+    /* Project palette, independent of the monochrome site. */
+    --amber: #e0902a;
+    --teal: #12a08a;
+    --ice: #3f98dc;
+    --green: #2e9d57;
+    --edge: #7b8a86;
+    position: absolute;
+    inset: 0;
+    container-type: inline-size;
+    background:
+      radial-gradient(80% 70% at 100% 0%, rgba(18, 160, 138, 0.14), transparent 60%),
+      radial-gradient(60% 60% at 30% 100%, rgba(63, 152, 220, 0.1), transparent 60%),
+      #eef5f2;
+  }
+  @media (prefers-color-scheme: dark) {
+    .dv-art {
+      --amber: #f2a94a;
+      --teal: #3cc6ae;
+      --ice: #6db8f0;
+      --green: #58c47f;
+      --edge: #7f8f8a;
+      background:
+        radial-gradient(80% 70% at 100% 0%, rgba(60, 198, 174, 0.12), transparent 60%),
+        #161f1c;
+    }
+  }
+  svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 3%;
+  }
+  .tall {
+    display: none;
+  }
+  @container (max-width: 520px) {
+    .wide {
+      display: none;
+    }
+    .tall {
+      display: block;
+    }
+  }
+
+  .tone-amber {
+    --tone: var(--amber);
+  }
+  .tone-teal {
+    --tone: var(--teal);
+  }
+  .tone-ice {
+    --tone: var(--ice);
+  }
+  .tone-green {
+    --tone: var(--green);
+  }
+
+  .region {
+    fill: color-mix(in srgb, var(--surface) 55%, transparent);
+    stroke: var(--line-strong);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 7;
+  }
+  .panel,
+  .node-box {
+    fill: var(--surface);
+    stroke: var(--line);
+    stroke-width: 1.5;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.07));
+  }
+  .node-tick {
+    fill: var(--tone);
+  }
+  .edge {
+    fill: none;
+    stroke: var(--edge);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  .arrowhead {
+    fill: none;
+    stroke: var(--edge);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .loop {
+    fill: none;
+    stroke: var(--teal);
+    stroke-width: 2;
+    stroke-dasharray: 5 6;
+  }
+  .link {
+    fill: none;
+    stroke: var(--edge);
+    stroke-width: 2;
+    stroke-dasharray: 3 6;
+    stroke-linecap: round;
+  }
+  .cond,
+  .sql {
+    fill: var(--surface);
+    stroke: var(--line-strong);
+    stroke-width: 1.2;
+  }
+  .sql-t {
+    fill: var(--ink);
+    font-weight: 600;
+  }
+  .snow {
+    fill: none;
+    stroke: var(--ice);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  .axis {
+    stroke: var(--line-strong);
+    stroke-width: 1.5;
+  }
+  .bar {
+    fill: var(--tone);
+    transform-box: fill-box;
+    transform-origin: bottom;
+    transform: scaleY(0);
+    transition: transform 700ms var(--ease-out);
+    transition-delay: var(--d, 0ms);
+  }
+  .dot {
+    fill: var(--tone);
+  }
+  .skel {
+    fill: var(--surface-2);
+  }
+  .skel-strong {
+    fill: var(--line-strong);
+    opacity: 0.5;
+  }
+  .pill {
+    fill: color-mix(in srgb, var(--tone) 16%, transparent);
+  }
+  .t-pill {
+    font: 600 13px var(--font);
+    fill: color-mix(in srgb, var(--tone) 75%, var(--ink));
+  }
+  .t-node {
+    font: 500 19px var(--font);
+    fill: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .t-small {
+    font: 500 14px var(--font);
+    fill: var(--muted);
+  }
+  .t-label {
+    font: 500 14px var(--font);
+    fill: var(--muted);
+    letter-spacing: 0.01em;
+  }
+
+  .token-bg {
+    fill: var(--ink);
+  }
+  .token-house {
+    fill: var(--bg);
+  }
+  .token {
+    opacity: 0;
+    transition: opacity 300ms var(--ease-out) 800ms;
+  }
+
+  /* Entrance: pieces rise in, edges draw, then the home travels the path. */
+  .pop {
+    opacity: 0;
+    transform: translateY(8px);
+    transform-box: fill-box;
+    transition:
+      opacity 500ms var(--ease-out),
+      transform 600ms var(--ease-out);
+    transition-delay: var(--d, 0ms);
+  }
+  .draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 700ms var(--ease-in-out);
+    transition-delay: var(--d, 0ms);
+  }
+  :global(.is-in) .pop {
+    opacity: 1;
+    transform: none;
+  }
+  :global(.is-in) .draw {
+    stroke-dashoffset: 0;
+  }
+  :global(.is-in) .bar {
+    transform: none;
+  }
+  :global(.is-in) .token {
+    opacity: 1;
+  }
+  :global(.is-in) .token-w {
+    animation: dv-travel-w 4.4s var(--ease-in-out) 1.4s both;
+  }
+  :global(.is-in) .token-t {
+    animation: dv-travel-t 4.4s var(--ease-in-out) 1.4s both;
+  }
+  @keyframes dv-travel-w {
+    0%,
+    10% {
+      transform: translate(0, 0);
+    }
+    28%,
+    36% {
+      transform: translate(240px, 0);
+    }
+    54%,
+    62% {
+      transform: translate(240px, 260px);
+    }
+    80%,
+    100% {
+      transform: translate(480px, 0);
+    }
+  }
+  @keyframes dv-travel-t {
+    0%,
+    10% {
+      transform: translate(0, 0);
+    }
+    28%,
+    36% {
+      transform: translate(0, 120px);
+    }
+    54%,
+    62% {
+      transform: translate(274px, 120px);
+    }
+    80%,
+    100% {
+      transform: translate(0, 244px);
+    }
+  }
+</style>

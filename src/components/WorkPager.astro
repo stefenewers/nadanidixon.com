@@ -1,0 +1,57 @@
+---
+// "Next" link at the bottom of each work page, cycling through the index order.
+import { roles } from '../data/work';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  current: string;
+}
+const linked = roles.filter((r) => r.href);
+const i = linked.findIndex((r) => r.id === Astro.props.current);
+const next = linked[(i + 1) % linked.length];
+---
+
+<nav class="pager" aria-label="More work">
+  <a class="next" href={next.href}>
+    <span class="label">Next</span>
+    <span class="row">
+      <span class="mark">{next.mark}</span>
+      <span class="name">{next.company}</span>
+      <Arrow dir="right" />
+    </span>
+  </a>
+</nav>
+
+<style>
+  .pager {
+    margin-top: clamp(64px, 9vh, 104px);
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+  .next {
+    display: inline-grid;
+    gap: 8px;
+  }
+  .row {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 17px;
+    font-weight: 500;
+  }
+  .row :global(svg) {
+    width: 12px;
+    height: 12px;
+    transition: transform 220ms var(--ease-out);
+  }
+  @media (hover: hover) {
+    .next:hover :global(svg) {
+      transform: translateX(3px);
+    }
+    .next:hover .name {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1px;
+    }
+  }
+</style>

@@ -5,6 +5,7 @@ import Footer from '../../components/Footer.astro';
 import Media from '../../components/Media.astro';
 import Visual from '../../components/Visual.astro';
 import Arrow from '../../components/Arrow.astro';
+import WorkPager from '../../components/WorkPager.astro';
 import { roles, redfin } from '../../data/work';
 import { pageAnim } from '../../lib/transitions';
 
@@ -84,6 +85,8 @@ const f = redfin.featured;
         ))
       }
     </section>
+
+    <WorkPager current="redfin" />
   </main>
   <Footer mid />
 </Base>

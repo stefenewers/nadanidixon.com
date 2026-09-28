@@ -2,12 +2,15 @@
 // Visual slot for a piece of work. An approved screenshot or video (`media`)
 // always wins; until one exists, the drawn composition for that area shows.
 // Art animates in when scrolled into view (see the observer in Base.astro).
-import type { Art, Media as MediaT } from '../data/work';
+import { artAlt, type Art, type Media as MediaT } from '../data/work';
 import Media from './Media.astro';
 import NeighborhoodArt from './art/NeighborhoodArt.astro';
 import CostArt from './art/CostArt.astro';
 import HomeArt from './art/HomeArt.astro';
 import DiscoverArt from './art/DiscoverArt.astro';
+import DivvyArt from './art/DivvyArt.astro';
+import KnovelArt from './art/KnovelArt.astro';
+import MastercardArt from './art/MastercardArt.astro';
 
 interface Props {
   art?: Art;
@@ -15,10 +18,21 @@ interface Props {
   class?: string;
   /** view-transition-name, for morphing between pages. */
   name?: string;
+  /** Hide from assistive tech, e.g. when inside a link that already names it. */
+  decorative?: boolean;
 }
 
-const { art, media, class: className, name } = Astro.props;
-const arts = { neighborhood: NeighborhoodArt, cost: CostArt, home: HomeArt, discover: DiscoverArt };
+const { art, media, class: className, name, decorative = false } = Astro.props;
+const arts = {
+  neighborhood: NeighborhoodArt,
+  cost: CostArt,
+  home: HomeArt,
+  discover: DiscoverArt,
+  divvy: DivvyArt,
+  knovel: KnovelArt,
+  mastercard: MastercardArt,
+};
+const a11y = decorative || !art ? { 'aria-hidden': 'true' as const } : { role: 'img', 'aria-label': artAlt[art] };
 const ArtComponent = art ? arts[art] : null;
 const style = name ? `view-transition-name: ${name}` : undefined;
 ---
@@ -28,7 +42,7 @@ const style = name ? `view-transition-name: ${name}` : undefined;
     <Media media={media} class={className} />
   ) : (
     ArtComponent && (
-      <div class:list={['visual', className]} data-art aria-hidden="true" style={style}>
+      <div class:list={['visual', className]} data-art style={style} {...a11y}>
         <ArtComponent />
       </div>
     )

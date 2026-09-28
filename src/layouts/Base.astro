@@ -2,16 +2,13 @@
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 import { site } from '../data/site';
-import LayoutSwitch from '../components/LayoutSwitch.astro';
 
 interface Props {
   title?: string;
   description?: string;
-  /** Show the A/B layout tab (homepage only). */
-  layoutSwitch?: boolean;
 }
 
-const { title, description = site.description, layoutSwitch = false } = Astro.props;
+const { title, description = site.description } = Astro.props;
 const pageTitle = title ? `${title} · ${site.name}` : `${site.name} · Software Engineer`;
 const canonical = new URL(Astro.url.pathname, site.url);
 ---
@@ -37,7 +34,6 @@ const canonical = new URL(Astro.url.pathname, site.url);
   <body>
     <a class="skip" href="#main">Skip to content</a>
     <slot />
-    {layoutSwitch && <LayoutSwitch current="b" />}
     <script>
       // Play each drawn visual's entrance once it scrolls into view.
       document.addEventListener('astro:page-load', () => {
