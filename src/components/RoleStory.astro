@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import TopBar from './TopBar.astro';
 import Footer from './Footer.astro';
 import Visual from './Visual.astro';
+import Mark from './Mark.astro';
 import WorkPager from './WorkPager.astro';
 import { roles, stories } from '../data/work';
 import { pageAnim } from '../lib/transitions';
@@ -19,7 +20,7 @@ const story = stories[Astro.props.id];
   <TopBar mid />
   <main id="main" class="page page--mid story" transition:animate={pageAnim}>
     <header class="head">
-      <span class="mark mark--strong" transition:name={`mark-${role.id}`} aria-hidden="true">{role.mark}</span>
+      <Mark mark={role.mark} logo={role.logo} logoTile={role.logoTile} strong name={`mark-${role.id}`} />
       <div>
         <h1 tabindex="-1" data-focus-on-nav>
           <span class="company" transition:name={`company-${role.id}`}>{role.company}</span>
@@ -89,7 +90,7 @@ const story = stories[Astro.props.id];
     align-items: center;
     gap: 16px;
   }
-  .head .mark {
+  .head :global(.mark) {
     width: 44px;
     height: 44px;
     border-radius: 12px;

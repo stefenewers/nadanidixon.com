@@ -4,7 +4,7 @@
 //   Redfin  -> the stack fans out into a collage and each piece animates
 //   others  -> a typographic card with that role's real tenure on a timeline
 // Purely decorative (aria-hidden); every fact here is also in the index.
-import { roles } from '../data/work';
+import { roles, projects } from '../data/work';
 import NeighborhoodArt from './art/NeighborhoodArt.astro';
 import CostArt from './art/CostArt.astro';
 import HomeArt from './art/HomeArt.astro';
@@ -12,6 +12,8 @@ import DiscoverArt from './art/DiscoverArt.astro';
 import DivvyArt from './art/DivvyArt.astro';
 import KnovelArt from './art/KnovelArt.astro';
 import MastercardArt from './art/MastercardArt.astro';
+import ThinkethArt from './art/ThinkethArt.astro';
+import Mark from './Mark.astro';
 
 const deck = [
   { key: 'map', Art: NeighborhoodArt, cap: 'Neighborhood Search' },
@@ -28,8 +30,8 @@ const pct = (y: number) => ((y - axisStart) / (axisEnd - axisStart)) * 100;
 const ticks = Array.from({ length: axisEnd - axisStart + 1 }, (_, i) => axisStart + i);
 const others = roles.filter((r) => r.id !== 'redfin');
 // Per-role hues for the preview cards only. The site chrome stays monochrome.
-const hues: Record<string, string> = { knovel: '#5b5bd6', divvy: '#12a08a', mastercard: '#f0701f' };
-const roleArt: Record<string, any> = { knovel: KnovelArt, divvy: DivvyArt, mastercard: MastercardArt };
+const hues: Record<string, string> = { knovel: '#5b5bd6', divvy: '#12a08a', mastercard: '#f0701f', thinketh: '#c4553b' };
+const roleArt: Record<string, any> = { knovel: KnovelArt, divvy: DivvyArt, mastercard: MastercardArt, thinketh: ThinkethArt };
 ---
 
 <div class="stage" data-stage data-state="rest" aria-hidden="true">
@@ -57,8 +59,11 @@ const roleArt: Record<string, any> = { knovel: KnovelArt, divvy: DivvyArt, maste
           </div>
           <div class="role-foot">
             <div class="role-text">
-              <p class="role-company">{r.company}</p>
-              <p class="role-title">{r.title}</p>
+              <Mark mark={r.mark} logo={r.logo} logoTile={r.logoTile} class="role-mark" />
+              <div>
+                <p class="role-company">{r.company}</p>
+                <p class="role-title">{r.title}</p>
+              </div>
             </div>
             <div class="timeline">
               <div class="track">
@@ -73,6 +78,27 @@ const roleArt: Record<string, any> = { knovel: KnovelArt, divvy: DivvyArt, maste
                 {ticks.map((t) => (
                   <span style={`left: ${pct(t)}%`}>{t}</span>
                 ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    })
+  }
+  {
+    projects.map((p) => {
+      const ProjectArt = roleArt[p.id];
+      return (
+        <div class="role" data-for={p.id} style={`--hue: ${hues[p.id] ?? '#687076'}`}>
+          <div class="role-art" style={`view-transition-name: art-${p.id}`}>
+            <ProjectArt />
+          </div>
+          <div class="role-foot">
+            <div class="role-text">
+              <Mark mark={p.mark} logo={p.logo} strong class="role-mark" />
+              <div>
+                <p class="role-company">{p.name}</p>
+                <p class="role-title">{p.context}</p>
               </div>
             </div>
           </div>
@@ -293,6 +319,17 @@ const roleArt: Record<string, any> = { knovel: KnovelArt, divvy: DivvyArt, maste
     overflow: hidden;
     box-shadow: inset 0 0 0 1px var(--line);
   }
+  .role-text {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .role-text :global(.role-mark) {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    font-size: 19px;
+  }
   .role-foot {
     padding-inline: clamp(12px, 2vw, 24px);
   }
@@ -349,16 +386,12 @@ const roleArt: Record<string, any> = { knovel: KnovelArt, divvy: DivvyArt, maste
     transform: translateX(-100%);
   }
 
-  .stage[data-state='knovel'] .role[data-for='knovel'],
-  .stage[data-state='divvy'] .role[data-for='divvy'],
-  .stage[data-state='mastercard'] .role[data-for='mastercard'] {
+  .role.is-in {
     opacity: 1;
     transform: none;
     transition-delay: 80ms;
   }
-  .stage[data-state='knovel'] .role[data-for='knovel'] .span--on,
-  .stage[data-state='divvy'] .role[data-for='divvy'] .span--on,
-  .stage[data-state='mastercard'] .role[data-for='mastercard'] .span--on {
+  .role.is-in .span--on {
     transform: none;
   }
 </style>

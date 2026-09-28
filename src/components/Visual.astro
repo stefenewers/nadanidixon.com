@@ -11,6 +11,7 @@ import DiscoverArt from './art/DiscoverArt.astro';
 import DivvyArt from './art/DivvyArt.astro';
 import KnovelArt from './art/KnovelArt.astro';
 import MastercardArt from './art/MastercardArt.astro';
+import ThinkethArt from './art/ThinkethArt.astro';
 
 interface Props {
   art?: Art;
@@ -31,6 +32,7 @@ const arts = {
   divvy: DivvyArt,
   knovel: KnovelArt,
   mastercard: MastercardArt,
+  thinketh: ThinkethArt,
 };
 const a11y = decorative || !art ? { 'aria-hidden': 'true' as const } : { role: 'img', 'aria-label': artAlt[art] };
 const ArtComponent = art ? arts[art] : null;

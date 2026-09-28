@@ -1,22 +1,29 @@
 ---
-// "Next" link at the bottom of each work page, cycling through the index order.
-import { roles } from '../data/work';
+// "Next" link at the bottom of each work or project page, cycling through the
+// homepage order: roles first, then projects.
+import { roles, projects } from '../data/work';
 import Arrow from './Arrow.astro';
+import Mark from './Mark.astro';
 
 interface Props {
   current: string;
 }
-const linked = roles.filter((r) => r.href);
-const i = linked.findIndex((r) => r.id === Astro.props.current);
-const next = linked[(i + 1) % linked.length];
+const items = [
+  ...roles
+    .filter((r) => r.href)
+    .map((r) => ({ id: r.id, mark: r.mark, logo: r.logo, logoTile: r.logoTile, name: r.company, href: r.href! })),
+  ...projects.map((p) => ({ id: p.id, mark: p.mark, logo: p.logo, logoTile: false, name: p.name, href: p.href })),
+];
+const i = items.findIndex((r) => r.id === Astro.props.current);
+const next = items[(i + 1) % items.length];
 ---
 
 <nav class="pager" aria-label="More work">
   <a class="next" href={next.href}>
     <span class="label">Next</span>
     <span class="row">
-      <span class="mark">{next.mark}</span>
-      <span class="name">{next.company}</span>
+      <Mark mark={next.mark} logo={next.logo} logoTile={next.logoTile} />
+      <span class="name">{next.name}</span>
       <Arrow dir="right" />
     </span>
   </a>

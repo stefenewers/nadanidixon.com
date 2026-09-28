@@ -1,0 +1,48 @@
+---
+// A real phone screen capture with its caption. Opens full size in a new tab.
+import type { Shot } from '../data/work';
+
+interface Props {
+  shot: Shot;
+}
+const { shot } = Astro.props;
+---
+
+<figure class="phone">
+  <a href={shot.src} target="_blank" rel="noopener noreferrer" class="screen">
+    <img src={shot.src} alt={shot.alt} width="780" height="1688" loading="lazy" decoding="async" />
+  </a>
+  <figcaption>{shot.caption}</figcaption>
+</figure>
+
+<style>
+  .phone {
+    min-width: 0;
+  }
+  .screen {
+    display: block;
+    overflow: hidden;
+    border-radius: 22px;
+    background: var(--surface);
+    box-shadow:
+      inset 0 0 0 1px var(--line),
+      var(--shadow);
+    transition: transform 300ms var(--ease-out);
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @media (hover: hover) {
+    .screen:hover {
+      transform: translateY(-2px);
+    }
+  }
+  figcaption {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--muted);
+  }
+</style>

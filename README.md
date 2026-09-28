@@ -19,10 +19,12 @@ npm run preview
 | Homepage intro | `src/components/Intro.astro` |
 | Work index, Redfin page copy, education | `src/data/work.ts` |
 | Redfin detail page | `src/pages/work/redfin.astro` |
+| Projects (Thinketh) | `src/pages/projects/*.astro` → `src/components/ProjectStory.astro`, copy in `projectStories`, screenshots in `public/projects/` |
 | Divvy, Knovel, Mastercard pages | `src/pages/work/*.astro` → `src/components/RoleStory.astro`, copy in `stories` in `src/data/work.ts` |
 | Case studies (Markdown) | `src/content/work/*.md` |
 | Homepage hover stage | `src/components/Stage.astro` |
 | Drawn visuals | `src/components/art/` |
+| Portrait, company logos | `public/nadani.jpg`, `public/logos/` (optimized); full-size originals in `assets/originals/` (not served) |
 | Page transitions | `src/lib/transitions.ts` |
 | Design tokens | `src/styles/global.css` |
 

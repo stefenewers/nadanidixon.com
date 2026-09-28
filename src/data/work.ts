@@ -12,7 +12,7 @@
 // Copy notes: keep it in Nadani's voice, no em dashes, and no metrics or
 // ownership claims she hasn't confirmed. See CONTENT-TODO.md.
 
-export type Art = 'neighborhood' | 'cost' | 'home' | 'discover' | 'divvy' | 'knovel' | 'mastercard';
+export type Art = 'neighborhood' | 'cost' | 'home' | 'discover' | 'divvy' | 'knovel' | 'mastercard' | 'thinketh';
 
 // Accessible descriptions for the drawn visuals. They describe the concept,
 // not a real product screen.
@@ -27,6 +27,8 @@ export const artAlt: Record<Art, string> = {
     'Conceptual diagram of a home moving through an operational workflow. It goes from move-out to turnover, branches to winterization when needed, and reaches a ready state that opens buyer and realtor steps. A retry loop marks exceptions, and each step shows who acts on it. The workflow feeds an operations view with a chart and a list of homes by state.',
   knovel:
     'Conceptual diagram of author royalties. An author and a published work connect to a royalty contract inside an on-chain zone where transactions are immutable. An on-chain event crosses the boundary into backend services, which sync an application view showing a royalty received, while a royalty flows back to the author.',
+  thinketh:
+    'Conceptual diagram of Thinketh’s learning loop. Developments in a field are compared with the person’s Mind; one is marked new for you and another already known and skipped. The difference, the delta, becomes a one-question check. The answer passes through a fixed update rule, not a model, and one book on the Mind’s shelf darkens as its evidence gets stronger, logged as Stronger evidence.',
   mastercard:
     'Conceptual diagram of one spending event moving through a financial system. A card event enters through a REST API, joins a busy event stream, and fans out to several services that each show in sync, some backed by databases. A rising step line underneath marks growth from Software Engineer I in 2020 to Senior Software Engineer in 2024.',
 };
@@ -43,8 +45,12 @@ export interface Media {
 export interface Role {
   id: string;
   company: string;
-  /** Monogram shown in the index. Typographic, not a logo. */
+  /** Letter shown when there is no logo. */
   mark: string;
+  /** Company logo in /public/logos. */
+  logo?: string;
+  /** Logo has a transparent background and needs a white tile. */
+  logoTile?: boolean;
   title: string;
   years: string;
   /** Only roles with a real detail page get one. */
@@ -62,6 +68,7 @@ export const roles: Role[] = [
     id: 'redfin',
     company: 'Redfin',
     mark: 'R',
+    logo: '/logos/redfin.png',
     title: 'Software Engineer II, Rentals Consumer',
     years: '2025–Now',
     href: '/work/redfin',
@@ -75,6 +82,7 @@ export const roles: Role[] = [
     id: 'knovel',
     company: 'Knovel Protocol',
     mark: 'K',
+    logo: '/logos/knovel.png',
     title: 'Founding Engineer',
     years: '2024–2025',
     href: '/work/knovel-protocol',
@@ -84,6 +92,7 @@ export const roles: Role[] = [
     id: 'divvy',
     company: 'Divvy Homes',
     mark: 'D',
+    logo: '/logos/divvy.png',
     title: 'Senior Software Engineer',
     years: '2024–2025',
     href: '/work/divvy-homes',
@@ -93,6 +102,8 @@ export const roles: Role[] = [
     id: 'mastercard',
     company: 'Mastercard',
     mark: 'M',
+    logo: '/logos/mastercard.png',
+    logoTile: true,
     title: 'Software Engineer I to Senior Software Engineer',
     years: '2020–2024',
     href: '/work/mastercard',
@@ -230,6 +241,100 @@ export const stories: Record<string, Story> = {
     meta: [
       { label: 'Platform', value: 'Expense management' },
       { label: 'Tools', value: 'Java, Spring Boot, Kafka' },
+    ],
+  },
+};
+
+// Projects outside of work. Thinketh facts come from the team's repository
+// (github.com/stefenewers/thinketh) and its commit history, which is how
+// Nadani's part is separated from Stefen's below.
+export interface Project {
+  id: string;
+  name: string;
+  mark: string;
+  logo?: string;
+  context: string;
+  year: string;
+  href: string;
+}
+
+export const projects: Project[] = [
+  {
+    id: 'thinketh',
+    name: 'Thinketh',
+    mark: 'T',
+    logo: '/logos/thinketh.png',
+    context: 'HackGT 13 · with Stefen Ewers',
+    year: '2026',
+    href: '/projects/thinketh',
+  },
+];
+
+export interface Shot {
+  src: string;
+  alt: string;
+  caption: string;
+}
+
+export const projectStories = {
+  thinketh: {
+    id: 'thinketh',
+    art: 'thinketh' as Art,
+    headline: 'A personal learning system that teaches you only what you don’t already know.',
+    dates: 'HackGT 13, Georgia Tech · Sep 2026',
+    intro:
+      'Stefen Ewers and I built Thinketh in about 36 hours at HackGT 13, in the AI/ML track. It compares what is changing in a field with what you have shown you understand, then teaches the difference.',
+    idea: 'Reading something isn’t the same as understanding it. Thinketh keeps two states side by side: what is changing in the world, and what you have demonstrated. A model helps phrase and explain, but it never decides what you know. Mastery moves only through a fixed rule, and every change keeps its evidence and its reason.',
+    mine: [
+      'The first version of the intelligence layer: the knowledge-state engine and its update rule, adaptive diagnostic selection, the delta engine, and the daily brief.',
+      'The Hono API in front of it, serving shared Zod contracts to the app.',
+      'Adapters for every outside service, each with a timeout and a deterministic fallback, and taking MongoDB Atlas with Atlas Search, Tiger Data, Backboard, and Supabase live.',
+      'Visualize this: a topic-aware diagram planner and a native renderer that draws a change as a diagram.',
+      'Deploy readiness and demo polish, including a Deno-verified Edge Function, secrets scripts, and fixes from a full click-through of the demo.',
+    ],
+    team: 'Stefen built most of the mobile app, the Playground where two people’s agents teach each other, and the Mindprint layout engine.',
+    meta: [
+      { label: 'Team', value: 'Stefen Ewers and Nadani Dixon' },
+      { label: 'Window', value: 'About 36 hours' },
+      { label: 'Stack', value: 'TypeScript, React Native, Hono, Zod' },
+      { label: 'Status', value: 'Working hackathon prototype' },
+    ],
+    product: [
+      {
+        src: '/projects/thinketh/today.jpg',
+        alt: 'Thinketh’s Today screen: 6 new things worth knowing, with counts of items scanned, new, connected to your Mind, and filtered, and a Catch me up button.',
+        caption: 'Today. What changed in the fields you follow, measured against your Mind.',
+      },
+      {
+        src: '/projects/thinketh/development.jpg',
+        alt: 'A Thinketh development on persistent agent memory: the change in a minute, the catch, what it builds on that you knew, why it matters to you, and a Check my understanding button.',
+        caption: 'A development. The change, the catch, and what it builds on that you already knew.',
+      },
+      {
+        src: '/projects/thinketh/check.jpg',
+        alt: 'Thinketh’s Check my understanding screen: a scenario question with four options, one selected, and feedback explaining why it is right.',
+        caption: 'The check. One question that tests the idea, not the wording.',
+      },
+    ] as Shot[],
+    built: [
+      {
+        src: '/projects/thinketh/mind-changes.jpg',
+        alt: 'Thinketh’s Recently changed list for the Mind: entries labeled Stronger evidence, Unchanged, More certain and Weaker, each with the engine’s reason and when it happened.',
+        caption: 'The engine at work. Every change to the Mind carries its own reason, even when nothing changed.',
+      },
+      {
+        src: '/projects/thinketh/visualize.jpg',
+        alt: 'Thinketh’s Visualize this screen titled From vanishing context to a curated store, contrasting context as memory, where knowledge is discarded when a session ends, with memory as a store, where distilled facts are consolidated.',
+        caption: 'Visualize this. A change drawn as the old model and the new one.',
+      },
+    ] as Shot[],
+    video: {
+      src: 'https://player.vimeo.com/video/1230766511?title=0&byline=0&portrait=0&badge=0&autopause=0&dnt=1',
+      title: 'Thinketh demo walkthrough, recorded for HackGT 13',
+    },
+    links: [
+      { label: 'Source on GitHub', href: 'https://github.com/stefenewers/thinketh' },
+      { label: 'Stefen’s engineering case study', href: 'https://www.stefenewers.com/projects/thinketh' },
     ],
   },
 };

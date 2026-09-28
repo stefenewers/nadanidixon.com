@@ -1,20 +1,21 @@
 ---
 import { roles } from '../data/work';
 import Arrow from './Arrow.astro';
+import Mark from './Mark.astro';
 import Visual from './Visual.astro';
-import { redfin } from '../data/work';
+import { redfin, projects } from '../data/work';
 ---
 
-<section class="index" aria-labelledby="work-label">
+<section class="index" aria-labelledby="work-label" data-role-list>
   <h2 id="work-label" class="label">Work</h2>
-  <ol class="rows" data-role-list>
+  <ol class="rows">
     {
       roles.map((r) =>
         r.featured ? (
           <li data-role={r.id}>
             <a class="row row--open" href={r.href}>
               <Visual art={redfin.featured.art} media={redfin.featured.media} class="row-visual" name="art-neighborhood" decorative />
-              <span class="mark mark--strong" transition:name={`mark-${r.id}`} aria-hidden="true">{r.mark}</span>
+              <Mark mark={r.mark} logo={r.logo} logoTile={r.logoTile} strong name={`mark-${r.id}`} />
               <span class="main">
                 <span class="company" transition:name={`company-${r.id}`}>{r.company}</span>
                 <span class="title">{r.title}</span>
@@ -35,7 +36,7 @@ import { redfin } from '../data/work';
         ) : (
           <li data-role={r.id}>
             <a class="row row--link" href={r.href}>
-              <span class="mark" transition:name={`mark-${r.id}`} aria-hidden="true">{r.mark}</span>
+              <Mark mark={r.mark} logo={r.logo} logoTile={r.logoTile} name={`mark-${r.id}`} />
               <span class="main">
                 <span class="company" transition:name={`company-${r.id}`}>{r.company}</span>
                 <span class="title">{r.title}</span>
@@ -50,6 +51,27 @@ import { redfin } from '../data/work';
       )
     }
   </ol>
+
+  <h2 id="projects-label" class="label projects-label">Projects</h2>
+  <ol class="rows" aria-labelledby="projects-label">
+    {
+      projects.map((p) => (
+        <li data-role={p.id}>
+          <a class="row row--link" href={p.href}>
+            <Mark mark={p.mark} logo={p.logo} name={`mark-${p.id}`} />
+            <span class="main">
+              <span class="company" transition:name={`company-${p.id}`}>{p.name}</span>
+              <span class="title">{p.context}</span>
+            </span>
+            <span class="years">
+              {p.year}
+              <Arrow dir="right" />
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
 </section>
 
 <style>
@@ -59,6 +81,9 @@ import { redfin } from '../data/work';
   .rows {
     list-style: none;
     margin-top: 4px;
+  }
+  .projects-label {
+    margin-top: 40px;
   }
   .rows > li {
     border-bottom: 1px solid var(--line);
@@ -115,7 +140,7 @@ import { redfin } from '../data/work';
     .row--link:hover {
       background: var(--surface-2);
     }
-    .row--link:hover .mark {
+    .row--link:hover :global(.mark:not(.mark--logo)) {
       background: var(--surface);
     }
     .row--link:hover .years :global(svg) {

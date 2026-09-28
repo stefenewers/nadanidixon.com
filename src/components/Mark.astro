@@ -1,0 +1,43 @@
+---
+// Company or project mark: the real logo when we have one, otherwise a
+// typographic monogram. Decorative; the name always appears beside it.
+interface Props {
+  mark: string;
+  logo?: string;
+  /** Logos with transparent backgrounds sit on a white tile. */
+  logoTile?: boolean;
+  strong?: boolean;
+  class?: string;
+  name?: string;
+}
+const { mark, logo, logoTile = false, strong = false, class: className, name } = Astro.props;
+---
+
+<span
+  class:list={['mark', className, { 'mark--strong': strong && !logo, 'mark--logo': logo, 'mark--tile': logoTile }]}
+  style={name ? `view-transition-name: ${name}` : undefined}
+  aria-hidden="true"
+>
+  {logo ? <img src={logo} alt="" width="128" height="128" decoding="async" /> : mark}
+</span>
+
+<style>
+  .mark--logo {
+    overflow: hidden;
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+  .mark--logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .mark--tile {
+    background: #fff;
+  }
+  .mark--tile img {
+    object-fit: contain;
+    padding: 8%;
+  }
+</style>

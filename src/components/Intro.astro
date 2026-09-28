@@ -4,7 +4,7 @@ import Arrow from './Arrow.astro';
 ---
 
 <header class="intro">
-  <span class="mark mark--strong monogram" aria-hidden="true">nd</span>
+  <img class="portrait" src="/nadani.jpg" alt="Portrait of Nadani Dixon, smiling, in a dark sweater" width="480" height="480" decoding="async" fetchpriority="high" />
   <h1 class="lead">
     <span class="name">{site.name}</span>
     <span class="desc">Software engineer in Atlanta, building the parts of a product people actually touch.</span>
@@ -22,12 +22,14 @@ import Arrow from './Arrow.astro';
   .intro {
     padding-top: clamp(48px, 9vh, 104px);
   }
-  .monogram {
-    width: 36px;
-    height: 36px;
-    border-radius: 11px;
-    font-size: 15px;
-    letter-spacing: -0.04em;
+  .portrait {
+    display: block;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--surface-2);
+    box-shadow: 0 0 0 1px var(--line);
   }
   .lead {
     margin-top: 28px;

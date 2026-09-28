@@ -1,0 +1,428 @@
+---
+// Thinketh: the knowledge-state loop Nadani built the engine for.
+// What changed in the world is compared with what a person has shown they
+// understand; only the difference becomes a check, and a fixed rule (not a
+// model) updates the Mind. Palette borrows Thinketh's warm paper and rust.
+const books = [
+  { h: 104, tone: 'b1' },
+  { h: 118, tone: 'b2' },
+  { h: 92, tone: 'b1' },
+  { h: 112, tone: 'b3' },
+  { h: 98, tone: 'dash' },
+  { h: 120, tone: 'b2' },
+  { h: 100, tone: 'b4' },
+];
+const books2 = [
+  { h: 96, tone: 'b3' },
+  { h: 116, tone: 'target' },
+  { h: 104, tone: 'b1' },
+  { h: 90, tone: 'b4' },
+  { h: 114, tone: 'b2' },
+  { h: 100, tone: 'dash' },
+  { h: 108, tone: 'b3' },
+];
+const shelf = (row: typeof books, x0: number, base: number, w = 30, gap = 8) =>
+  row.map((b, i) => ({ ...b, x: x0 + i * (w + gap), y: base - b.h, w }));
+const check = 'M-5 0 L-1.5 3.5 L5 -3.5';
+const rule = 'Δm = 0.35·U·w·(target − m)';
+---
+
+<div class="tk-art">
+  <!-- Wide -->
+  <svg class="wide" viewBox="0 0 1200 680" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <marker id="tk-arr-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M1 1 L9 5 L1 9" class="arrowhead" />
+      </marker>
+    </defs>
+
+    <text x="60" y="76" class="t-label pop">What changed in the field</text>
+    {[0, 1, 2].map((i) => (
+      <g class:list={['pop', { skipped: i === 2 }]} style={`--d: ${100 + i * 110}ms`}>
+        <rect x="60" y={98 + i * 126} width="300" height="108" rx="16" class:list={['dev', { 'dev-hot': i === 0 }]} />
+        <circle cx="86" cy={126 + i * 126} r="5" class={i === 0 ? 'dot-hot' : 'dot'} />
+        <rect x="100" y={121 + i * 126} width={i === 0 ? 150 : 120} height="10" rx="5" class="bar-strong" />
+        <rect x="80" y={146 + i * 126} width="240" height="8" rx="4" class="bar" />
+        <rect x="80" y={162 + i * 126} width="190" height="8" rx="4" class="bar" />
+        <rect x="80" y={182 + i * 126} width="70" height="8" rx="4" class="bar faint" />
+      </g>
+    ))}
+    <g class="pop tag-hot" style="--d: 700ms">
+      <rect x="236" y="84" width="112" height="26" rx="13" class="tag-hot-bg" />
+      <text x="292" y="102" text-anchor="middle" class="t-tag hot">new for you</text>
+    </g>
+    <g class="pop" style="--d: 800ms">
+      <rect x="190" y="364" width="160" height="26" rx="13" class="tag-bg" />
+      <text x="270" y="382" text-anchor="middle" class="t-tag">already known · skipped</text>
+    </g>
+
+    <path class="edge draw" style="--d: 900ms" d="M360 152 C392 152 392 250 410 250" pathLength="1" marker-end="url(#tk-arr-w)" />
+    <g class="pop" style="--d: 950ms">
+      <rect x="410" y="218" width="230" height="66" rx="33" class="delta" />
+      <text x="525" y="246" text-anchor="middle" class="t-node">The delta</text>
+      <text x="525" y="268" text-anchor="middle" class="t-small">new, minus what you know</text>
+    </g>
+    <path class="compare pop" style="--d: 950ms" d="M860 250 H644" marker-end="url(#tk-arr-w)" />
+    <text x="752" y="240" text-anchor="middle" class="t-small pop" style="--d: 950ms">compare</text>
+
+    <path class="edge draw" style="--d: 1250ms" d="M525 284 V356" pathLength="1" marker-end="url(#tk-arr-w)" />
+    <g class="pop" style="--d: 1250ms">
+      <rect x="420" y="356" width="210" height="200" rx="18" class="card" />
+      <text x="442" y="392" class="t-node">Check</text>
+      <rect x="442" y="408" width="166" height="8" rx="4" class="bar" />
+      {[0, 1, 2].map((i) => (
+        <g>
+          <rect x="442" y={430 + i * 38} width="166" height="30" rx="10" class:list={['opt', { 'opt-on': i === 1 }]} />
+          <circle cx="460" cy={445 + i * 38} r="7" class={i === 1 ? 'radio-on' : 'radio'} />
+          {i === 1 && <path transform={`translate(460 ${445 + i * 38})`} d={check} class="radio-check" />}
+          <rect x="476" y={441 + i * 38} width={i === 1 ? 96 : 80} height="8" rx="4" class="bar" />
+        </g>
+      ))}
+    </g>
+
+    <path class="edge draw" style="--d: 1650ms" d="M630 480 H860" pathLength="1" marker-end="url(#tk-arr-w)" />
+    <g class="pop" style="--d: 1700ms">
+      <rect x="628" y="498" width="228" height="32" rx="10" class="rule" />
+      <text x="742" y="519" text-anchor="middle" class="t-mono">{rule}</text>
+      <text x="742" y="552" text-anchor="middle" class="t-small">a rule, not a model</text>
+    </g>
+
+    <g class="pop" style="--d: 400ms">
+      <rect x="860" y="60" width="290" height="580" rx="22" class="panel" />
+      <text x="884" y="96" class="t-label">Your Mind</text>
+      {shelf(books, 884, 236).map((b) => (
+        <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" class={`book ${b.tone}`} />
+      ))}
+      <path d="M876 238 H1134" class="shelf" />
+      {shelf(books2, 884, 374).map((b) => (
+        <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" class={`book ${b.tone}`} />
+      ))}
+      <path d="M876 376 H1134" class="shelf" />
+      <text x="884" y="420" class="t-small">Darker means stronger evidence</text>
+      <g class="log log-new" style="--d: 2200ms">
+        <circle cx="890" cy="466" r="5" class="dot-hot" />
+        <text x="904" y="471" class="t-tag hot">Stronger evidence</text>
+        <rect x="904" y="484" width="170" height="8" rx="4" class="bar" />
+      </g>
+      <g>
+        <circle cx="890" cy="526" r="5" class="dot" />
+        <text x="904" y="531" class="t-tag">Unchanged</text>
+        <rect x="904" y="544" width="140" height="8" rx="4" class="bar" />
+      </g>
+      <g>
+        <circle cx="890" cy="586" r="5" class="dot" />
+        <text x="904" y="591" class="t-tag">More certain</text>
+        <rect x="904" y="604" width="150" height="8" rx="4" class="bar" />
+      </g>
+    </g>
+  </svg>
+
+  <!-- Tall -->
+  <svg class="tall" viewBox="0 0 600 1060" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <marker id="tk-arr-t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M1 1 L9 5 L1 9" class="arrowhead" />
+      </marker>
+    </defs>
+
+    <text x="40" y="52" class="t-label pop">What changed in the field</text>
+    {[0, 1, 2].map((i) => (
+      <g class:list={['pop', { skipped: i === 2 }]} style={`--d: ${100 + i * 110}ms`}>
+        <rect x="40" y={70 + i * 96} width="520" height="80" rx="16" class:list={['dev', { 'dev-hot': i === 0 }]} />
+        <circle cx="66" cy={96 + i * 96} r="5" class={i === 0 ? 'dot-hot' : 'dot'} />
+        <rect x="80" y={91 + i * 96} width="170" height="10" rx="5" class="bar-strong" />
+        <rect x="60" y={116 + i * 96} width="300" height="8" rx="4" class="bar" />
+      </g>
+    ))}
+    <g class="pop" style="--d: 700ms">
+      <rect x="432" y="84" width="112" height="26" rx="13" class="tag-hot-bg" />
+      <text x="488" y="102" text-anchor="middle" class="t-tag hot">new for you</text>
+    </g>
+    <g class="pop" style="--d: 800ms">
+      <rect x="392" y="276" width="152" height="26" rx="13" class="tag-bg" />
+      <text x="468" y="294" text-anchor="middle" class="t-tag">already known · skipped</text>
+    </g>
+
+    <path class="edge draw" style="--d: 900ms" d="M300 342 V388" pathLength="1" marker-end="url(#tk-arr-t)" />
+    <g class="pop" style="--d: 950ms">
+      <rect x="170" y="388" width="260" height="66" rx="33" class="delta" />
+      <text x="300" y="416" text-anchor="middle" class="t-node">The delta</text>
+      <text x="300" y="438" text-anchor="middle" class="t-small">new, minus what you know</text>
+    </g>
+
+    <path class="edge draw" style="--d: 1250ms" d="M300 454 V494" pathLength="1" marker-end="url(#tk-arr-t)" />
+    <g class="pop" style="--d: 1250ms">
+      <rect x="150" y="494" width="300" height="190" rx="18" class="card" />
+      <text x="174" y="530" class="t-node">Check</text>
+      <rect x="174" y="546" width="250" height="8" rx="4" class="bar" />
+      {[0, 1, 2].map((i) => (
+        <g>
+          <rect x="174" y={566 + i * 36} width="252" height="28" rx="10" class:list={['opt', { 'opt-on': i === 1 }]} />
+          <circle cx="192" cy={580 + i * 36} r="7" class={i === 1 ? 'radio-on' : 'radio'} />
+          {i === 1 && <path transform={`translate(192 ${580 + i * 36})`} d={check} class="radio-check" />}
+          <rect x="208" y={576 + i * 36} width={i === 1 ? 130 : 110} height="8" rx="4" class="bar" />
+        </g>
+      ))}
+    </g>
+
+    <path class="edge draw" style="--d: 1650ms" d="M300 684 V760" pathLength="1" marker-end="url(#tk-arr-t)" />
+    <g class="pop" style="--d: 1700ms">
+      <rect x="316" y="700" width="244" height="30" rx="10" class="rule" />
+      <text x="438" y="720" text-anchor="middle" class="t-mono small">{rule}</text>
+      <text x="438" y="748" text-anchor="middle" class="t-small">a rule, not a model</text>
+    </g>
+
+    <g class="pop" style="--d: 400ms">
+      <rect x="40" y="760" width="520" height="280" rx="22" class="panel" />
+      <text x="64" y="794" class="t-label">Your Mind</text>
+      {shelf(books2, 64, 930, 32, 10).map((b) => (
+        <rect x={b.x} y={b.y} width={b.w} height={b.h} rx="4" class={`book ${b.tone}`} />
+      ))}
+      <path d="M56 932 H364" class="shelf" />
+      <g class="log log-new" style="--d: 2200ms">
+        <circle cx="386" cy="842" r="5" class="dot-hot" />
+        <text x="400" y="847" class="t-tag hot">Stronger evidence</text>
+        <rect x="400" y="860" width="130" height="8" rx="4" class="bar" />
+      </g>
+      <g>
+        <circle cx="386" cy="902" r="5" class="dot" />
+        <text x="400" y="907" class="t-tag">Unchanged</text>
+        <rect x="400" y="920" width="110" height="8" rx="4" class="bar" />
+      </g>
+      <text x="64" y="970" class="t-small">Darker means stronger evidence</text>
+    </g>
+  </svg>
+</div>
+
+<style>
+  .tk-art {
+    --rust: #c4553b;
+    --b1: #3a2e29;
+    --b2: #75594c;
+    --b3: #b39a8a;
+    --b4: #ddcfc4;
+    --paper: #f6f1ea;
+    --edge: #8f837b;
+    position: absolute;
+    inset: 0;
+    container-type: inline-size;
+    background:
+      radial-gradient(70% 70% at 100% 0%, rgba(196, 85, 59, 0.12), transparent 60%),
+      radial-gradient(60% 60% at 0% 100%, rgba(117, 89, 76, 0.1), transparent 60%),
+      var(--paper);
+  }
+  @media (prefers-color-scheme: dark) {
+    .tk-art {
+      --rust: #ec7a5e;
+      --b1: #efe4da;
+      --b2: #bfa596;
+      --b3: #7d675b;
+      --b4: #4a3d36;
+      --paper: #1f1a17;
+      --edge: #978a82;
+    }
+  }
+  svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 3%;
+  }
+  .tall {
+    display: none;
+  }
+  @container (max-width: 520px) {
+    .wide {
+      display: none;
+    }
+    .tall {
+      display: block;
+    }
+  }
+
+  .dev,
+  .card,
+  .panel {
+    fill: var(--surface);
+    stroke: var(--line);
+    stroke-width: 1.5;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.07));
+  }
+  .dev-hot {
+    stroke: var(--rust);
+    stroke-width: 2;
+  }
+  .skipped {
+    transition-property: opacity, transform;
+  }
+  :global(.is-in) .skipped {
+    opacity: 0.45;
+  }
+  .dot {
+    fill: var(--line-strong);
+  }
+  .dot-hot {
+    fill: var(--rust);
+  }
+  .bar {
+    fill: var(--surface-2);
+  }
+  .bar.faint {
+    opacity: 0.6;
+  }
+  .bar-strong {
+    fill: var(--line-strong);
+    opacity: 0.55;
+  }
+  .tag-hot-bg {
+    fill: color-mix(in srgb, var(--rust) 14%, var(--surface));
+    stroke: color-mix(in srgb, var(--rust) 50%, transparent);
+  }
+  .tag-bg {
+    fill: var(--surface);
+    stroke: var(--line-strong);
+  }
+  .t-tag {
+    font: 600 12px var(--font);
+    fill: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .t-tag.hot {
+    fill: var(--rust);
+  }
+  .delta {
+    fill: var(--surface);
+    stroke: var(--rust);
+    stroke-width: 2;
+  }
+  .edge {
+    fill: none;
+    stroke: var(--edge);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  .compare {
+    fill: none;
+    stroke: var(--edge);
+    stroke-width: 2;
+    stroke-dasharray: 3 6;
+    stroke-linecap: round;
+  }
+  .arrowhead {
+    fill: none;
+    stroke: var(--edge);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .opt {
+    fill: var(--surface-2);
+  }
+  .opt-on {
+    fill: color-mix(in srgb, var(--rust) 12%, var(--surface));
+    stroke: var(--rust);
+    stroke-width: 1.5;
+  }
+  .radio {
+    fill: var(--surface);
+    stroke: var(--line-strong);
+    stroke-width: 1.5;
+  }
+  .radio-on {
+    fill: var(--rust);
+  }
+  .radio-check {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .rule {
+    fill: var(--surface);
+    stroke: var(--line-strong);
+  }
+  .t-mono {
+    font: 500 13px ui-monospace, 'SF Mono', Menlo, monospace;
+    fill: var(--ink);
+  }
+  .t-mono.small {
+    font-size: 12px;
+  }
+  .book {
+    stroke: none;
+  }
+  .b1 {
+    fill: var(--b1);
+  }
+  .b2 {
+    fill: var(--b2);
+  }
+  .b3 {
+    fill: var(--b3);
+  }
+  .b4 {
+    fill: var(--b4);
+  }
+  .dash {
+    fill: none;
+    stroke: var(--rust);
+    stroke-width: 1.8;
+    stroke-dasharray: 4 4;
+  }
+  /* The book the check just updated: it darkens once the rule applies. */
+  .target {
+    fill: var(--b4);
+    transition: fill 900ms var(--ease-out) 2000ms;
+  }
+  :global(.is-in) .target {
+    fill: var(--b1);
+  }
+  .shelf {
+    stroke: var(--b2);
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+  .t-node {
+    font: 500 19px var(--font);
+    fill: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .t-small {
+    font: 500 14px var(--font);
+    fill: var(--muted);
+  }
+  .t-label {
+    font: 500 14px var(--font);
+    fill: var(--muted);
+  }
+
+  .pop,
+  .log-new {
+    opacity: 0;
+    transform: translateY(8px);
+    transform-box: fill-box;
+    transition:
+      opacity 500ms var(--ease-out),
+      transform 600ms var(--ease-out);
+    transition-delay: var(--d, 0ms);
+  }
+  .draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 700ms var(--ease-in-out);
+    transition-delay: var(--d, 0ms);
+  }
+  :global(.is-in) .pop,
+  :global(.is-in) .log-new {
+    opacity: 1;
+    transform: none;
+  }
+  :global(.is-in) .pop.skipped {
+    opacity: 0.45;
+  }
+  :global(.is-in) .draw {
+    stroke-dashoffset: 0;
+  }
+</style>

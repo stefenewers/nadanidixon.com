@@ -66,3 +66,20 @@ Everything below is written from the content brief. Please confirm each line bef
 
 ### Visual colors
 - [ ] The role hues (indigo for Knovel, teal for Divvy, orange for Mastercard) are ours, not the companies' brand colors. Fine as is?
+
+## 7. Thinketh (first project)
+Where: `projects` and `projectStories.thinketh` in `src/data/work.ts`, illustration in `src/components/art/ThinkethArt.astro`, screenshots in `public/projects/thinketh/`. Page: `/projects/thinketh`.
+
+Sources: the team repo (github.com/stefenewers/thinketh), its commit history, and Stefen's case study. "What I built" was separated from Stefen's work using commit authorship: Nadani authored the first intelligence/API commit (engine, update rule, diagnostic selection, delta, daily brief, Hono API, service adapters with fallbacks, 56 tests), the live integrations (MongoDB Atlas, Tiger Data, Backboard, Supabase), Visualize this, deploy readiness, and several UI passes. Stefen authored most of the mobile app, the Playground, Mindprint, the contracts, and most tests.
+
+- [ ] Is Nadani comfortable with "What I built" as written, especially "the first version of the intelligence layer" (Stefen extended the engine afterwards)?
+- [ ] "Stefen built most of the mobile app, the Playground, and the Mindprint layout engine." OK with both of them?
+- [ ] Headline: "A personal learning system that teaches you only what you don't already know." In her voice?
+- [ ] Screenshots used: Today, Development, Check, Mind changes, Visualize this. The Playground screens show "Nadani" as a seeded demo persona and were left out on purpose.
+- [ ] The demo video is embedded from Vimeo (1230766511). Confirm it should stay public on her site.
+- [ ] The site says nothing about placing at HackGT, because it didn't. Keep it that way.
+- [ ] Illustration uses real Thinketh concepts (the delta, the check, the update rule Δm = 0.35·U·w·(target − m), books shaded by evidence, change labels like Stronger evidence). Confirm it reads as her engine.
+
+## 8. Portrait and logos
+- [ ] Portrait (`public/nadani.jpg`, cropped from `assets/originals/nadani.PNG`) is used on the homepage and as the social preview image. Confirm she's happy with the crop and with it appearing in link previews.
+- [ ] Company logos appear next to each role, and the Thinketh logo next to the project, only to identify each one.

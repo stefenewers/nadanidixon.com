@@ -4,6 +4,7 @@ import TopBar from '../../components/TopBar.astro';
 import Footer from '../../components/Footer.astro';
 import Media from '../../components/Media.astro';
 import Visual from '../../components/Visual.astro';
+import Mark from '../../components/Mark.astro';
 import Arrow from '../../components/Arrow.astro';
 import WorkPager from '../../components/WorkPager.astro';
 import { roles, redfin } from '../../data/work';
@@ -17,7 +18,7 @@ const f = redfin.featured;
   <TopBar mid />
   <main id="main" class="page page--mid detail" transition:animate={pageAnim}>
     <header class="head">
-      <span class="mark mark--strong" transition:name={`mark-${role.id}`} aria-hidden="true">{role.mark}</span>
+      <Mark mark={role.mark} logo={role.logo} logoTile={role.logoTile} strong name={`mark-${role.id}`} />
       <div>
         <h1 tabindex="-1" data-focus-on-nav>
           <span class="company" transition:name={`company-${role.id}`}>{role.company}</span>
@@ -100,7 +101,7 @@ const f = redfin.featured;
     align-items: center;
     gap: 16px;
   }
-  .head .mark {
+  .head :global(.mark) {
     width: 44px;
     height: 44px;
     border-radius: 12px;
