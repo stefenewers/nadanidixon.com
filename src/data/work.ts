@@ -103,16 +103,26 @@ export const alsoWork: Feature[] = [
   },
 ];
 
+export interface TimelineEntry {
+  label: string;
+  place: string;
+  detail: string | null;
+}
+
 export const background = {
   intro: [
     'I studied computer science at Middlebury College, and I’m now working toward an M.S. in Computer Science at Georgia Tech.',
-    'Before Redfin, I worked at Mastercard and Divvy Homes. The thread through all of it is the same: I like building things where it’s easy to picture the person on the other side of the screen.',
+    'Before Redfin, I was a founding engineer at Knovel Protocol and a senior software engineer at Divvy Homes. I started my career at Mastercard, where I spent four years and grew from Software Engineer I to Senior Software Engineer.',
+    'The thread through all of it: I like building things where it’s easy to picture the person on the other side of the screen.',
   ],
-  timeline: [
-    { label: 'Now', place: 'Redfin', detail: 'Software Engineer II, Rentals Consumer' },
-    { label: 'Before', place: 'Divvy Homes', detail: null },
-    { label: 'Before', place: 'Mastercard', detail: null },
-    { label: 'Studying', place: 'Georgia Tech', detail: 'M.S. Computer Science' },
+  experience: [
+    { label: '2025–Now', place: 'Redfin', detail: 'Software Engineer II, Rentals Consumer' },
+    { label: '2024–2025', place: 'Knovel Protocol', detail: 'Founding Engineer' },
+    { label: '2024–2025', place: 'Divvy Homes', detail: 'Senior Software Engineer' },
+    { label: '2020–2024', place: 'Mastercard', detail: 'Software Engineer I to Senior Software Engineer' },
+  ] as TimelineEntry[],
+  education: [
+    { label: 'In progress', place: 'Georgia Tech', detail: 'M.S. Computer Science' },
     { label: 'Studied', place: 'Middlebury College', detail: 'Computer Science' },
-  ] as { label: string; place: string; detail: string | null }[],
+  ] as TimelineEntry[],
 };

@@ -8,7 +8,9 @@ Everything on the site today is written from the project names alone. Each item 
 - [ ] Her role on Neighborhood Search: lead engineer, one of several, front end, back end, full stack? Currently says "Software engineer" only.
 - [ ] One-line summaries for each feature (src/data/work.ts), especially Sun Exposure "parity" (parity with what?), Total Cost of Renting (what costs are included?), and the Mobile Media Gallery sticky footer (what's in the footer?).
 - [ ] Web, iOS, Android, or all three for each feature.
-- [ ] Titles at Mastercard and Divvy Homes, and whether she wants them listed.
+- [ ] Redfin title: LinkedIn says "Software Engineer", the brief said "Software Engineer II". The site uses II. Which is right?
+- [ ] Knovel Protocol (founding engineer, 2024 to 2025) is now listed. Anything she built there worth a line or a project entry?
+- [ ] Her LinkedIn shows Knovel overlapping Redfin until July 2025. Fine to show years only, as the site does now?
 - [ ] The personal line in Background ("I like building things where it's easy to picture the person on the other side of the screen"). Keep, rewrite, or cut.
 
 ## Screenshots (highest priority)
