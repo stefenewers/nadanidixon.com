@@ -1,0 +1,109 @@
+---
+import { site } from '../data/site';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  home?: boolean;
+}
+const { home = true } = Astro.props;
+const base = home ? '' : '/';
+---
+
+<header class="top wrap">
+  <a class="id" href="/" aria-label={`${site.name}, home`}>
+    <span class="mark" aria-hidden="true">nd</span>
+    <span class="id-text">
+      <span class="id-name">{site.name}</span>
+      <span class="id-role">{site.role}</span>
+    </span>
+  </a>
+  <nav aria-label="Primary">
+    <a href={`${base}#work`}>Work</a>
+    <a href={`${base}#background`}>Background</a>
+    {site.resume && <a href={site.resume}>Résumé</a>}
+    <a class="nav-out" href={site.linkedin} target="_blank" rel="noopener noreferrer">
+      LinkedIn<Arrow />
+    </a>
+  </nav>
+</header>
+
+<style>
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    font-size: 14px;
+  }
+  .id {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .mark {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    transition: transform 300ms var(--ease-out);
+  }
+  .id:hover .mark {
+    transform: rotate(-6deg);
+  }
+  .id-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+  }
+  .id-name {
+    font-weight: 500;
+  }
+  .id-role {
+    color: var(--muted);
+  }
+  nav {
+    display: flex;
+    gap: 4px;
+  }
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    color: var(--ink-2);
+    transition:
+      background-color 160ms var(--ease-out),
+      color 160ms var(--ease-out);
+  }
+  nav a :global(svg) {
+    width: 10px;
+    height: 10px;
+  }
+  @media (hover: hover) {
+    nav a:hover {
+      background: var(--surface-2);
+      color: var(--ink);
+    }
+  }
+  .nav-out {
+    border: 1px solid var(--line-strong);
+    margin-left: 6px;
+  }
+  @media (max-width: 640px) {
+    .id-role {
+      display: none;
+    }
+    nav a:not(.nav-out) {
+      display: none;
+    }
+  }
+</style>

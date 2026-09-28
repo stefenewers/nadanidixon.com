@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Arrow from '../components/Arrow.astro';
+---
+
+<Base title="Not found">
+  <Header home={false} />
+  <main id="main" class="wrap nf">
+    <h1>This page isn’t here.</h1>
+    <a class="link" href="/"><Arrow dir="left" />Back home</a>
+  </main>
+</Base>
+
+<style>
+  .nf {
+    flex: 1;
+    display: grid;
+    align-content: center;
+    gap: 20px;
+    padding-bottom: 20vh;
+  }
+  h1 {
+    font-size: clamp(2.25rem, 1.4rem + 3vw, 3.75rem);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+</style>

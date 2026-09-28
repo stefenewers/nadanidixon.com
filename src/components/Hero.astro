@@ -1,0 +1,130 @@
+---
+import { site } from '../data/site';
+---
+
+<section class="hero wrap" aria-labelledby="hero-title">
+  <p class="eyebrow hero-in" style="--i: 0">{site.role} at Redfin</p>
+  <h1 id="hero-title" class="statement">
+    <span class="hero-in" style="--i: 1">I help build rental search at Redfin, for people figuring out </span><span
+      class="hero-in hl"
+      style="--i: 2">where to live next.</span
+    >
+  </h1>
+  <div class="hero-foot hero-in" style="--i: 3">
+    <p class="intro">
+      I’m Nadani, a software engineer on Redfin’s Rentals Consumer team. I work with product managers and
+      designers on the moments renters care about most: picking a neighborhood, getting to know a home, and
+      deciding whether it fits their life and budget.
+    </p>
+    <dl class="facts">
+      <div>
+        <dt>Now</dt>
+        <dd>Software Engineer II, Redfin Rentals</dd>
+      </div>
+      <div>
+        <dt>Featured</dt>
+        <dd><a class="link" href="#featured">Neighborhood Search</a></dd>
+      </div>
+      <div>
+        <dt>Studying</dt>
+        <dd>M.S. Computer Science, Georgia Tech</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: clamp(56px, 11vw, 148px);
+    padding-bottom: clamp(64px, 10vw, 128px);
+  }
+  .statement {
+    margin-top: 28px;
+    max-width: 15.5em;
+    font-size: clamp(2.5rem, 1rem + 5.4vw, 5.5rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+  /* Accent rule that draws in under the key phrase once the headline lands.
+     A background (not a pseudo-element) so it follows the phrase across line wraps. */
+  .statement .hero-in.hl {
+    color: var(--accent-ink);
+    padding-bottom: 0.04em;
+    background: linear-gradient(var(--accent), var(--accent)) no-repeat 0 100% / 0% max(3px, 0.055em);
+    animation:
+      fade 900ms var(--ease-out) both,
+      draw 1000ms var(--ease-in-out) 1000ms forwards;
+    animation-delay: 280ms, 1000ms;
+  }
+  @keyframes draw {
+    to {
+      background-size: 100% max(3px, 0.055em);
+    }
+  }
+
+  .hero-foot {
+    margin-top: clamp(40px, 6vw, 72px);
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: clamp(28px, 6vw, 96px);
+    align-items: start;
+  }
+  .intro {
+    max-width: 34em;
+    font-size: clamp(1.0625rem, 0.95rem + 0.4vw, 1.25rem);
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+  .facts {
+    display: grid;
+    border-top: 1px solid var(--line);
+    font-size: 15px;
+  }
+  .facts div {
+    display: grid;
+    grid-template-columns: 6.5em 1fr;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .facts dt {
+    color: var(--muted);
+  }
+
+  /* Staggered entrance on first paint. */
+  .hero-in {
+    display: inline;
+    animation: rise 900ms var(--ease-out) both;
+    animation-delay: calc(var(--i) * 110ms + 60ms);
+  }
+  .eyebrow.hero-in {
+    display: flex;
+  }
+  .hero-foot.hero-in {
+    display: grid;
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+  /* Inline spans can't translate, so the headline pieces just fade + unblur. */
+  .statement .hero-in {
+    animation-name: fade;
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+      filter: blur(6px);
+    }
+  }
+
+  @media (max-width: 800px) {
+    .hero-foot {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

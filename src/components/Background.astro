@@ -1,0 +1,79 @@
+---
+import { background } from '../data/work';
+---
+
+<section id="background" class="bg wrap" aria-labelledby="bg-title">
+  <div class="left" data-reveal>
+    <h2 id="bg-title" class="section-title">Background</h2>
+  </div>
+  <div class="right">
+    <div class="copy" data-reveal>
+      {background.intro.map((p) => <p>{p}</p>)}
+    </div>
+    <ol class="timeline" data-reveal style="--delay: 120ms">
+      {
+        background.timeline.map((t) => (
+          <li>
+            <span class="t-label">{t.label}</span>
+            <span class="t-place">{t.place}</span>
+            <span class="t-detail">{t.detail}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .bg {
+    padding-top: clamp(96px, 14vw, 180px);
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: clamp(20px, 6vw, 96px);
+  }
+  .copy {
+    display: grid;
+    gap: 16px;
+    font-size: clamp(1.0625rem, 0.95rem + 0.3vw, 1.1875rem);
+    color: var(--ink-2);
+  }
+  .timeline {
+    list-style: none;
+    margin-top: 40px;
+    border-top: 1px solid var(--line);
+    font-size: 15px;
+  }
+  .timeline li {
+    display: grid;
+    grid-template-columns: 6.5em minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .t-label {
+    color: var(--muted);
+  }
+  .t-place {
+    font-weight: 500;
+  }
+  .t-detail {
+    color: var(--ink-2);
+  }
+  @media (max-width: 800px) {
+    .bg {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 480px) {
+    .timeline li {
+      grid-template-columns: 6.5em 1fr;
+    }
+    .t-detail {
+      grid-column: 2;
+      margin-top: -8px;
+    }
+    .t-detail:empty {
+      display: none;
+    }
+  }
+</style>

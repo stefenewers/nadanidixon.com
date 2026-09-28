@@ -1,0 +1,132 @@
+---
+import type { WorkEntry } from '../data/work';
+import Frame from './Frame.astro';
+import Arrow from './Arrow.astro';
+
+interface Props {
+  entry: WorkEntry;
+  delay?: number;
+}
+const { entry, delay = 0 } = Astro.props;
+---
+
+<article class:list={['tile', `tile--${entry.layout}`]} aria-labelledby={`${entry.id}-title`}>
+  <Frame art={entry.art} media={entry.media} class="tile-frame" />
+  <div class="text" data-reveal style={`--delay: ${delay}ms`}>
+    <p class="question">{entry.question}</p>
+    <h3 id={`${entry.id}-title`} class="name">{entry.title}</h3>
+    <p class="summary">{entry.summary}</p>
+    {
+      entry.features && (
+        <ul class="features">
+          {entry.features.map((f) => (
+            <li>
+              <span class="f-name">{f.name}</span>
+              <span class="f-sum">{f.summary}</span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    {
+      entry.caseStudy && (
+        <a class="link cta" href={`/work/${entry.caseStudy}`}>
+          Read more
+          <Arrow dir="right" />
+        </a>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .tile {
+    display: grid;
+    gap: 24px;
+    align-content: start;
+  }
+  .tile--half {
+    grid-column: span 6;
+  }
+  .tile--half :global(.tile-frame) {
+    aspect-ratio: 5 / 4;
+  }
+  .tile--wide {
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(24px, 5vw, 72px);
+    align-items: center;
+  }
+  .tile--wide :global(.tile-frame) {
+    aspect-ratio: 16 / 10;
+  }
+
+  .question {
+    font-size: 14px;
+    color: var(--accent-ink);
+    font-weight: 500;
+  }
+  .name {
+    margin-top: 6px;
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+  .summary {
+    margin-top: 12px;
+    max-width: 32em;
+    color: var(--ink-2);
+  }
+  .features {
+    list-style: none;
+    margin-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 15px;
+  }
+  .features li {
+    display: grid;
+    grid-template-columns: minmax(8.5em, 0.8fr) 1.6fr;
+    gap: 16px;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .f-name {
+    font-weight: 500;
+  }
+  .f-sum {
+    color: var(--muted);
+  }
+  .cta {
+    margin-top: 18px;
+    font-weight: 500;
+  }
+
+  /* Gentle lift on the art when hovering a tile. */
+  .tile :global(.tile-frame > *:first-child) {
+    transition: transform 700ms var(--ease-out);
+  }
+  @media (hover: hover) {
+    .tile:hover :global(.tile-frame > *:first-child) {
+      transform: scale(1.02);
+    }
+  }
+
+  @media (max-width: 860px) {
+    .tile--half {
+      grid-column: 1 / -1;
+    }
+    .tile--wide {
+      grid-template-columns: 1fr;
+    }
+    .tile--wide :global(.tile-frame) {
+      aspect-ratio: 5 / 4;
+    }
+  }
+  @media (max-width: 480px) {
+    .features li {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+  }
+</style>
